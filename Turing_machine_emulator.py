@@ -116,7 +116,7 @@ class Turing_machine_emulator():
 #MT.replace_command(1, '1', '1>1')
 #MT.replace_command(1, ' ', '_<2')
 #MT.replace_command(2, '0', '0<2')
-#MT.replace_command(2, '1', '1<2')
+#T.replace_command(2, '1', '1<2')
 #MT.replace_command(2, ' ', '_>0')
 
 #print(MT.table)
@@ -130,5 +130,8 @@ f = open('/home/anton/IASA/Kyrs_2/Semestr_2/OOP/Individual_work/Emulator/Decoder
 
 New_decoder = Decoder()
 Decoded_MT = New_decoder.Dikarev_decoder(f)
-Emulator = Turing_machine_emulator(['1', '1', '1', '1', '1', '|', '1', '1', '1', '1', '1 ', '0', '0'])
+########Вводить значения тут######
+mylist = [char for char in "1111|11010010"]
+##################################
+Emulator = Turing_machine_emulator(['1', '1', '1', '1', '1', '|', '1', '1', '1', '1', '1', '0', '0'])
 Emulator.emulate(Decoded_MT)
