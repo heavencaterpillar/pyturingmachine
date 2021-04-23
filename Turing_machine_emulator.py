@@ -133,5 +133,5 @@ Decoded_MT = New_decoder.Dikarev_decoder(f)
 ########Вводить значения тут######
 mylist = [char for char in "1111|11010010"]
 ##################################
-Emulator = Turing_machine_emulator(['1', '1', '1', '1', '1', '|', '1', '1', '1', '1', '1', '0', '0'])
+Emulator = Turing_machine_emulator(mylist)
 Emulator.emulate(Decoded_MT)
