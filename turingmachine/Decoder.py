@@ -67,7 +67,7 @@ class Decoder():
         return Encoded_MT
 
     def Dikarev_encoder(self, MT):  
-        f = open("/home/anton/IASA/Kyrs_2/Semestr_2/OOP/Individual_work/pyturingmachine/output/output.txt", "w")
+        f = open("/home/anton/IASA/Kyrs_2/Semestr_2/OOP/Individual_work/pyturingmachine/output/output.cmd", "w")
         
         for i in MT.table:
             for j in MT.table[i]:

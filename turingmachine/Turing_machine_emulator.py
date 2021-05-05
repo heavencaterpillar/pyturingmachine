@@ -102,36 +102,41 @@ class Turing_machine_emulator():
 
 
 
+###################
+Test = 2
+if Test == 1:   
+    MT = Turing_machine()   
+    MT.add_symbol('0')
+    MT.add_symbol('1')
+    MT.add_symbol('_')  
+    MT.replace_command(1, '0', '0>1')
+    MT.replace_command(1, '1', '1>1')
+    MT.replace_command(1, ' ', '_<2')
+    MT.replace_command(2, '0', '0<2')
+    MT.replace_command(2, '1', '1<2')
+    MT.replace_command(2, ' ', '_>0')   
+    print(MT.table)
+    print(MT.alphabet)  
+    Emulator = Turing_machine_emulator(['1', '1', '0', '1'])
+    Emulator.emulate(MT)
+
+if Test == 2:
+    f = open('/home/anton/IASA/Kyrs_2/Semestr_2/OOP/Individual_work/Emulator/Decoder/input')
+
+    New_decoder = Decoder()
+    Decoded_MT = New_decoder.Dikarev_decoder(f)
+    New_decoder.Dikarev_encoder(Decoded_MT)
+    ########Вводить значения тут######
+    #mylist = [char for char in "110|100"]
+    ##################################
+    #Emulator = Turing_machine_emulator(mylist)
+
+    #Emulator.emulate(Decoded_MT)
 
 
-
-#MT
-#MT = Turing_machine()
-
-#MT.add_symbol('0')
-#MT.add_symbol('1')
-#MT.add_symbol('_')
-
-#MT.replace_command(1, '0', '0>1')
-#MT.replace_command(1, '1', '1>1')
-#MT.replace_command(1, ' ', '_<2')
-#MT.replace_command(2, '0', '0<2')
-#T.replace_command(2, '1', '1<2')
-#MT.replace_command(2, ' ', '_>0')
-
-#print(MT.table)
-#print(MT.alphabet)
-
-#Emulator
-#Emulator = Turing_machine_emulator(['1', '1', '0', '1'])
-#Emulator.emulate(MT)
-
-f = open('/home/anton/IASA/Kyrs_2/Semestr_2/OOP/Individual_work/Emulator/Decoder/input')
-
-New_decoder = Decoder()
-Decoded_MT = New_decoder.Dikarev_decoder(f)
-########Вводить значения тут######
-mylist = [char for char in "1111|11010010"]
-##################################
-Emulator = Turing_machine_emulator(mylist)
-Emulator.emulate(Decoded_MT)
+if Test == 3:
+    print('Hello')
+    f = open("/home/anton/IASA/Kyrs_2/Semestr_2/OOP/Individual_work/pyturingmachine/output/myfile.txt", "w")
+    f.write("Woops! I have deleted the content!\n")
+    f.write("Woops! I have deleted the content!")
+    f.close()
