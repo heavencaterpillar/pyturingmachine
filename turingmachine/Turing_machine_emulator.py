@@ -24,7 +24,7 @@ class Turing_machine_emulator():
 
     def emulate(self, Turing_machine):
         while(True):
-            self.__print()    
+            #self.__print()    
             command = Turing_machine.table[str(self.state)][str(self.tape[self.position])]
             self.tape[self.position] = command[0]
 
@@ -127,11 +127,11 @@ if Test == 2:
     Decoded_MT = New_decoder.Dikarev_decoder(f)
     New_decoder.Dikarev_encoder(Decoded_MT)
     ########Вводить значения тут######
-    #mylist = [char for char in "110|100"]
+    mylist = [char for char in "101010|11111"]
     ##################################
-    #Emulator = Turing_machine_emulator(mylist)
+    Emulator = Turing_machine_emulator(mylist)
 
-    #Emulator.emulate(Decoded_MT)
+    Emulator.emulate(Decoded_MT)
 
 
 if Test == 3:
