@@ -1,6 +1,9 @@
 from Decoder import Decoder
+import pathlib
 def Get_Machine():
-    f = open('/home/anton/IASA/Kyrs_2/Semestr_2/OOP/Individual_work/Emulator/Decoder/input')
+    current_directory = str(pathlib.Path(__file__).parent.absolute())
+    path = current_directory + '/input/input'
+    f = open(path)
 
     New_decoder = Decoder()
     Decoded_MT = New_decoder.Dikarev_decoder(f)
