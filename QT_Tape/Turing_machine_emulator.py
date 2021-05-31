@@ -1,5 +1,5 @@
 from Turing_machine import Turing_machine 
-
+from Decoder import Decoder 
 
 class Turing_machine_emulator():
     def __init__(self, tape = [], position = 0, state = 1):
@@ -110,7 +110,6 @@ class Turing_machine_emulator():
             if self.state == '0':
                 self.__print()
                 return 0
-
 
 
 

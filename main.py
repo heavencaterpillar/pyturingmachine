@@ -8,7 +8,7 @@ class Window(QMainWindow):
         self.initializeUI()
 
     def initializeUI(self):
-        self.setGeometry(200, 200, 1000, 500) # x, y, width, height
+        self.setGeometry(200, 200, 1440, 1024) # x, y, width, height
         self.setMinimumSize(1000, 500)
         self.setWindowTitle('Turing Machine Simulator')
         self.createMenu()
