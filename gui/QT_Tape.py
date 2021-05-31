@@ -15,13 +15,14 @@ from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtGui import QPalette, QColor, QFont, QIcon, QPixmap
 from PyQt5 import QtCore
 
+
 class Window(QMainWindow): 
     def __init__(self): 
         super().__init__() # Initializer which calls constructor for QWidgself.initializeUI() # Call function used to set up window
         self.initializeUI()
 
     def initializeUI(self):
-        self.setGeometry(100, 100, 1440, 1024) # x, y, width, height
+        self.setGeometry(100, 100, 1200, 720) # x, y, width, height
         self.setWindowTitle('Turing Machine Simulator')
         self.createMenu()
         self.displayWidgets()
@@ -47,10 +48,10 @@ class Window(QMainWindow):
 
         run_button = QPushButton(self)
         run_button.clicked.connect(self.run_buttonClicked)
-        run_button.resize(36, 36)
-        run_button.move(22, 32)
+        run_button.resize(24, 24)
+        run_button.move(10, 32)
         run_button.setIcon(run_button_icon)
-        run_button.setIconSize(QSize(36,36))
+        run_button.setIconSize(QSize(24, 24))
         run_button.setStyleSheet("border: none;")
         #########
 
@@ -62,8 +63,8 @@ class Window(QMainWindow):
 
         pause_button = QPushButton(self)
         #run_button.clicked.connect(self.run_buttonClicked)
-        pause_button.resize(14, 25)
-        pause_button.move(96, 36)
+        pause_button.resize(10, 20)
+        pause_button.move(50, 32)
         pause_button.setIcon(pause_button_icon)
         pause_button.setIconSize(QSize(14, 25))
         pause_button.setStyleSheet("border: none;")
@@ -78,7 +79,7 @@ class Window(QMainWindow):
         stop_button = QPushButton(self)
         #stop_button.clicked.connect(self.run_buttonClicked)
         stop_button.resize(25, 25)
-        stop_button.move(170, 36)
+        stop_button.move(170, 32)
         stop_button.setIcon(stop_button_icon)
         stop_button.setIconSize(QSize(25, 25))
         stop_button.setStyleSheet("border: none;")
@@ -93,7 +94,7 @@ class Window(QMainWindow):
         save_button = QPushButton(self)
         #run_button.clicked.connect(self.run_buttonClicked)
         save_button.resize(25, 25)
-        save_button.move(244, 36)
+        save_button.move(244, 32)
         save_button.setIcon(save_button_icon)
         save_button.setIconSize(QSize(25, 25))
         save_button.setStyleSheet("border: none;")
@@ -108,7 +109,7 @@ class Window(QMainWindow):
         reset_button = QPushButton(self)
         #run_button.clicked.connect(self.run_buttonClicked)
         reset_button.resize(25, 25)
-        reset_button.move(318, 36)
+        reset_button.move(318, 32)
         reset_button.setIcon(reset_button_icon)
         reset_button.setIconSize(QSize(25, 25))
         reset_button.setStyleSheet("border: none;")
@@ -192,7 +193,22 @@ class Window(QMainWindow):
 
 # Run program
 if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    window = Window()
-    sys.exit(app.exec_())
+	palette = QPalette()
+	palette.setColor(QPalette.Window, QColor(53, 53, 53))
+	palette.setColor(QPalette.WindowText, Qt.white)
+	palette.setColor(QPalette.Base, QColor(25, 25, 25))
+	palette.setColor(QPalette.AlternateBase, QColor(53, 53, 53))
+	palette.setColor(QPalette.ToolTipBase, Qt.white)
+	palette.setColor(QPalette.ToolTipText, Qt.white)
+	palette.setColor(QPalette.Text, Qt.white)
+	palette.setColor(QPalette.Button, QColor(53, 53, 53))
+	palette.setColor(QPalette.ButtonText, Qt.white)
+	palette.setColor(QPalette.BrightText, Qt.red)
+	palette.setColor(QPalette.Link, QColor(42, 130, 218))
+	palette.setColor(QPalette.Highlight, QColor(42, 130, 218))
+	palette.setColor(QPalette.HighlightedText, Qt.black)
+	app = QApplication(sys.argv)
+	app.setPalette(palette)
+	window = Window()
+	sys.exit(app.exec_())
 
