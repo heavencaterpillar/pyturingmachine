@@ -2,8 +2,10 @@ from Turing_machine import Turing_machine
 from Decoder import Decoder 
 
 class Turing_machine_emulator():
-    def __init__(self, tape = [], position = 0, state = 1):
-        self.tape = dict(enumerate(tape)) #лента эмулятора
+    def __init__(self, position = 0, state = 1, tape = [" "]*27):
+        self.tape = dict() #лента эмулятора
+        for i in range(-13, len(tape)//2 + 1):
+            self.tape[i] = tape[i+13]
         self.position = position #текущая позиция на ленте
         self.state = state #текущее состояние в МТ
 
@@ -20,7 +22,6 @@ class Turing_machine_emulator():
         print(' '*counter, end = '')
         print('^')
         print('')
-
 
     def emulate(self, Turing_machine):
         while(True):
@@ -49,6 +50,9 @@ class Turing_machine_emulator():
 
     def emulate_one_step(self, Turing_machine):
         self.__print()    
+        print(str(self.state))
+        print(str(self.tape[self.position]))
+        print(self.position)
         command = Turing_machine.table[str(self.state)][str(self.tape[self.position])]
         self.tape[self.position] = command[0]
         if command[1] == '<':
