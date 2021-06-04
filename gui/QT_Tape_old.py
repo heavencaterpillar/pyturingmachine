@@ -55,15 +55,6 @@ class Window(QMainWindow):
         Toolbar.resize(1440, 79)
         Toolbar.move(0,0)
         Toolbar.setStyleSheet("background-color:rgb(54,54,54);")
-
-        current_directory = str(pathlib.Path(__file__).parent.absolute())
-        path = current_directory + '/icons/State_text'
-        print(path)
-        State_text_pic = QPixmap(path)
-        State_text = QLabel(self)
-        State_text.resize(137, 27)
-        State_text.move(1150,25)
-        State_text.setPixmap(State_text_pic)
         ############
 
         ###Tape panel####
@@ -233,18 +224,6 @@ class Window(QMainWindow):
         ####################
         x_coord += 74
 
-        self.state_line = QLineEdit(self)
-        self.state_line.setAlignment(Qt.AlignCenter) # The default alignmeis AlignLeft
-        self.state_line.move(1150+137+5, 28)
-        self.state_line.resize(54, 27) # Change size of entry field
-        self.state_line.setMaxLength(4)
-        self.state_line.setStyleSheet("background-color:rgb(37,37,38); color:rgb(255,0,255);")
-        self.state_line.setFont(QFont("Bruno Ace",20))
-        self.state_line.setText('1')
-
-
-       
-
 
     def displayTape(self):
 
@@ -315,10 +294,11 @@ class Window(QMainWindow):
 
         for i in range(0,27):     
             self.name_entry.append(QLineEdit(self))
-            self.name_entry[i].setAlignment(Qt.AlignCenter) # The default alignmeis AlignLeft
+            self.name_entry[i].setAlignment(Qt.AlignLeft) # The default alignmeis AlignLeft
             self.name_entry[i].move(45+i*50, 95)
             self.name_entry[i].resize(46, 80) # Change size of entry field
             self.name_entry[i].setMaxLength(1)
+            self.name_entry[i].setAlignment(QtCore.Qt.AlignCenter)
             self.name_entry[i].setStyleSheet("background-color:rgb(255,255,240); color:rgb(78,78,78);")
             self.name_entry[i].setFont(QFont("Roboto",50))
             self.name_entry[i].setText('')
@@ -459,10 +439,8 @@ class Window(QMainWindow):
         self.get_data(self.emulator)
         QApplication.processEvents()
         #playsound(path)
-        self.state_line.setText(str(self.emulator.state))
         if emulate == 0:
             QMessageBox().information(self, "Emulator", "Емулятор успішно закінчив свою роботу!", QMessageBox.Ok, QMessageBox.Ok)
-            self.emulator.state = 1
         self.change_button_icon('/icons/step_button', 36, 25, self.step_button)
 
         return
@@ -513,7 +491,6 @@ class Window(QMainWindow):
                     return
                 emulate = self.emulator.emulate_one_step(Machine)
                 self.get_data(self.emulator)
-                self.state_line.setText(str(self.emulator.state))
                 QApplication.processEvents()
                 #playsound(path)
                 time.sleep(self.run_speed)
@@ -552,9 +529,6 @@ class Window(QMainWindow):
         self.saved_position = copy.copy(self.emulator.position)
         time.sleep(0.05)
         self.change_button_icon('/icons/save_button', 25, 25, self.save_button)
-        return
-
-    def state_text_buttonClicked(self):
         return
 
 # Run program
