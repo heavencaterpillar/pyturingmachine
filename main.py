@@ -1,19 +1,16 @@
 from playsound import playsound
-import os, sys
-import pathlib
-import time
-import copy
+import os, sys, pathlib, time, copy
 
-from PyQt5.QtWidgets import (QApplication, QWidget, QAction, QLabel, QLineEdit, QPushButton, QMessageBox, QMainWindow)
+from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt, QSize
-from PyQt5.QtGui import QPalette, QColor, QFont, QIcon, QPixmap
+from PyQt5.QtGui import QPalette, QColor, QFont, QIcon, QPixmap, QKeySequence
 from PyQt5 import QtCore
 from PyQt5.Qt import QTransform
 
 sys.path.append("")
 
 from machine.emulator import Turing_machine_emulator
-from machine.Get_Machine import Get_Machine
+from machine.getmachine import Get_Machine
 
 class Window(QMainWindow):
     def __init__(self):
@@ -35,7 +32,6 @@ class Window(QMainWindow):
         self.stop_activated = False
 
 
-
     def initializeUI(self):
         self.setGeometry(100, 100, 1440, 1024) # x, y, width, y_coord
         self.setWindowTitle('Turing Machine Simulator')
@@ -44,7 +40,14 @@ class Window(QMainWindow):
         self.displayTape()
         self.displayToolbar()
         self.displayUndertape_panel()
+        self.textEditor()
         self.show()
+
+    def textEditor(self):
+        text_edit = QPlainTextEdit(self)
+        text_edit.resize(1000, 450)
+        text_edit.move(10, 220)
+
 
     def displayPanels(self):
         ###Toolbar panel####
@@ -55,75 +58,34 @@ class Window(QMainWindow):
 
         current_directory = str(pathlib.Path(__file__).parent.absolute())
         path = current_directory + '/icons/State_text'
-        print(path)
+        #print(path)
         State_text_pic = QPixmap(path)
         State_text = QLabel(self)
         State_text.resize(137, 27)
-        State_text.move(1150,25)
+        State_text.move(1150, 30)
         State_text.setPixmap(State_text_pic)
         ############
 
-        ###Tape panel####
-        Tape = QLabel(self)
-        Tape.resize(1440, 152)
-        Tape.move(0,60)
-        Tape.setStyleSheet("background-color:rgb(49,54,59);") # 39, 41, 45);")
-
-        Right_button = QLabel(self)
-        Right_button.resize(45, 80)
-        Right_button.move(1395, 95)
-        Right_button.setStyleSheet("background-color:rgb(54,54,54);")
-        Left_button = QLabel(self)
-        Left_button.resize(45, 80)
-        Left_button.move(0, 95)
-        Left_button.setStyleSheet("background-color:rgb(54,54,54);")
-        ############
-
-        ###Undertape panel####
-        Undertape = QLabel(self)
-        Undertape.resize(1440, 40)
-        Undertape.move(0,210)
-        Undertape.setStyleSheet("background-color:rgb(37,37,38);")
-        ############
-
-        ###Table####
-        Back_table = QLabel(self)
-        Back_table.resize(1360, 700)
-        Back_table.move(40,290)
-        Back_table.setStyleSheet("background-color:rgb(37,37,38);")
-
-        Front_table = QLabel(self)
-        Front_table.resize(1300, 655)
-        Front_table.move(100,335)
-        Front_table.setStyleSheet("background-color:rgb(255,255,255);")
-
-        lines1 = list()
-        for i in range(0,23):
-            lines1.append(QLabel(self))
-            lines1[i].resize(1, 700)
-            lines1[i].move(100+i*60,290)
-            lines1[i].setStyleSheet("background-color:rgb(0,0,0);")
-
-        lines2 = list()
-        for i in range(0,15):
-            lines2.append(QLabel(self))
-            lines2[i].resize(1360, 1)
-            lines2[i].move(40,335+i*45)
-            lines2[i].setStyleSheet("background-color:rgb(0,0,0);")
-        ############
-
-
 
     def createMenu(self):
+        menu = self.menuBar()
+        font = QFont("Helvetica [Cronyx]", 10)
+        font.setStretch(100)
+        menu.setFont(font)
+        menu.adjustSize()
+
         exit_act = QAction('Exit', self)
         exit_act.setShortcut('Ctrl+Q')
         exit_act.triggered.connect(self.close)
-        menu_bar = self.menuBar()
-        #menu_bar.resize(90,50)
-        #menu_bar.setMaximumWidth(30)
+        file_menu = menu.addMenu('File')
+        #Run_menu = menu.addMenu('Run')
+        #Export_menu = menu.addMenu('Export')
+        #Compile_menu = menu.addMenu('Compile')
 
-        menu_bar.setNativeMenuBar(False)
-        menu_bar.setStyleSheet("""
+        file_menu.addAction(exit_act)
+
+        menu.setNativeMenuBar(False)
+        menu.setStyleSheet("""
         QMenuBar {
             background-color: rgb(54,54,54);
             color: rgb(255,156,255);
@@ -150,17 +112,6 @@ class Window(QMainWindow):
         }
         """)
 
-        menu_font = QFont("Helvetica [Cronyx]", 10)
-        menu_font.setStretch(100)
-        menu_bar.setFont(menu_font)
-        menu_bar.adjustSize()
-        file_menu = menu_bar.addMenu('File')
-        Run_menu = menu_bar.addMenu('Run')
-        Export_menu = menu_bar.addMenu('Export')
-        Compile_menu = menu_bar.addMenu('Compile')
-
-        file_menu.addAction(exit_act)
-
     def create_Toolbar_button(self, size1, size2, icon_size1, icon_size2, x, y, short_path, connection):
         current_directory = str(pathlib.Path(__file__).parent.absolute())
         path = current_directory + short_path
@@ -186,7 +137,7 @@ class Window(QMainWindow):
         return button
 
     def displayToolbar(self):
-        y_coord = 25
+        y_coord = 35
         x_coord = 0
         #create_Toolbar_button(self, size1, size2, icon_size1, icon_size2, x, y, short_path)
 
@@ -238,9 +189,6 @@ class Window(QMainWindow):
         self.state_line.setStyleSheet("background-color:rgb(37,37,38); color:rgb(255,0,255);")
         self.state_line.setFont(QFont("Bruno Ace",20))
         self.state_line.setText('1')
-
-
-
 
 
     def displayTape(self):
@@ -458,7 +406,7 @@ class Window(QMainWindow):
         #playsound(path)
         self.state_line.setText(str(self.emulator.state))
         if emulate == 0:
-            QMessageBox().information(self, "Emulator", "Емулятор успішно закінчив свою роботу!", QMessageBox.Ok, QMessageBox.Ok)
+            QMessageBox().information(self, "Emulator", "Machine halted successfully", QMessageBox.Ok, QMessageBox.Ok)
             self.emulator.state = 1
         self.change_button_icon('/icons/step_button', 36, 25, self.step_button)
 
@@ -515,7 +463,7 @@ class Window(QMainWindow):
                 #playsound(path)
                 time.sleep(self.run_speed)
             self.emulator.state = 1
-            QMessageBox().information(self, "Emulator", "Емулятор успішно закінчив свою роботу!", QMessageBox.Ok, QMessageBox.Ok)
+            QMessageBox().information(self, "Emulator", "Machine halted successfully", QMessageBox.Ok, QMessageBox.Ok)
 
             self.change_button_icon('/icons/run_button4', 31, 25, self.run_button)
 

@@ -103,3 +103,48 @@ about_action.triggered.connect(show_about_dialog)
 
 window.show()
 app.exec_()
+
+    def createMenu(self):
+        menu = self.menuBar()
+        font = QFont("Helvetica [Cronyx]", 10)
+        font.setStretch(100)
+        menu.setFont(font)
+        menu.adjustSize()
+
+        exit_act = QAction('Exit', self)
+        exit_act.setShortcut('Ctrl+Q')
+        exit_act.triggered.connect(self.close)
+        file_menu = menu.addMenu('File')
+        #Run_menu = menu.addMenu('Run')
+        #Export_menu = menu.addMenu('Export')
+        #Compile_menu = menu.addMenu('Compile')
+
+        file_menu.addAction(exit_act)
+
+        menu.setNativeMenuBar(False)
+        menu.setStyleSheet("""
+        QMenuBar {
+            background-color: rgb(54,54,54);
+            color: rgb(255,156,255);
+            border: 1px black;
+        }
+
+        QMenuBar::item {
+            background-color: rgb(49,49,49);
+            color: rgb(255,156,255);
+        }
+
+        QMenuBar::item::selected {
+            background-color: rgb(45,45,45);
+        }
+
+        QMenu {
+            background-color: rgb(49,49,49);
+            color: rgb(255,156,255);
+            border: 1px black;
+        }
+
+        QMenu::item::selected {
+            background-color: rgb(45,45,45);
+        }
+        """)
