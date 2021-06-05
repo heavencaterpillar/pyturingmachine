@@ -12,7 +12,7 @@ from PyQt5.Qt import QTransform
 
 sys.path.append("")
 
-from machine.Turing_machine_emulator import Turing_machine_emulator
+from machine.emulator import Turing_machine_emulator
 from machine.Get_Machine import Get_Machine
 
 class Window(QMainWindow):

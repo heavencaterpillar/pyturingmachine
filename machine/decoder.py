@@ -1,4 +1,4 @@
-from machine.Turing_machine import Turing_machine
+from machine.emulator import Turing_machine
 
 class Decoder():
     def __init__(self):
