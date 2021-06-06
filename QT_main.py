@@ -57,7 +57,6 @@ class Window(QMainWindow):
 
         current_directory = str(pathlib.Path(__file__).parent.absolute())
         path = current_directory + '/icons/State_text'
-        print(path)
         State_text_pic = QPixmap(path)
         State_text = QLabel(self)
         State_text.resize(137, 27)
@@ -509,8 +508,6 @@ class Window(QMainWindow):
         time.sleep(0.05)
         Machine = Get_Machine()
         self.input_data(self.emulator)
-        print(self.emulator.tape)
-        print(self.emulator.position)
         emulate = 1
         current_directory = str(pathlib.Path(__file__).parent.absolute())
         #path = current_directory + '/sounds/test3.mp3'
@@ -619,8 +616,6 @@ class Window(QMainWindow):
 
             Machine = Get_Machine()
             self.input_data(self.emulator)
-            print(self.emulator.tape)
-            print(self.emulator.position)
             emulate = 1
             current_directory = str(pathlib.Path(__file__).parent.absolute())
             #path = current_directory + '/sounds/test3.mp3'

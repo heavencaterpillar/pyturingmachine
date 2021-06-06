@@ -136,14 +136,11 @@ class Turing_machine_emulator():
                     self.tape[self.position] = ' '
             self.state = command[2]
             if self.state == '0':
-                self.__print()
+                #self.__print()
                 return 0
 
     def emulate_one_step(self, Turing_machine):
-        self.__print()
-        print(str(self.state))
-        print(str(self.tape[self.position]))
-        print(self.position)
+        #self.__print()
         command = Turing_machine.table[str(self.state)][str(self.tape[self.position])]
         self.tape[self.position] = command[0]
         if command[1] == '<':
@@ -162,7 +159,6 @@ class Turing_machine_emulator():
                 self.tape[self.position] = ' '
         self.state = command[2]
         if self.state == '0':
-            self.__print()
             return 0
         return 1
 
@@ -183,7 +179,7 @@ class Turing_machine_emulator():
 
     def emulate_in_file(self, Turing_machine):
         while(True):
-            self.__print()
+            #self.__print()
             command = Turing_machine.table[str(self.state)][str(self.tape[self.position])]
             self.tape[self.position] = command[0]
 
