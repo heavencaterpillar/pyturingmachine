@@ -92,7 +92,7 @@ class Turing_machine():
 
 
 
-class Turing_machine_emulator():
+class Turing_machine_emulator(Turing_machine):
     def __init__(self, position = 0, state = 1, tape = [" "]*27):
         self.tape = dict() #лента эмулятора
         for i in range(-13, len(tape) // 2 + 1):
