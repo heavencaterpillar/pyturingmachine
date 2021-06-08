@@ -1,0 +1,87 @@
+QWidget {
+            background-color: #FFFFFF; - цвет внутренности таблицы  
+            color: #F30000; - цвет текст
+        }
+
+        QHeaderView::section {
+            background-color: #646464;
+            padding: 4px;
+            border: 1px solid #fffff8;
+            font-size: 14pt;
+        }
+
+        QTableWidget {
+            gridline-color: #fffff8;
+            font-size: 12pt;
+        }
+
+        QTableWidget QTableCornerButton::section {
+            background-color: #646464;
+            border: 1px solid #fffff8;
+        }"")
+
+                #Back_label = QLabel(self)     
+                #Back_label.resize(1360, 700)
+                #Back_label.move(40, 40)
+                #Back_label.setStyleSheet("background-color:rgb(37,37,38)")
+
+                return
+                #self.Front_table = QLabel(self)
+                #self.Front_table.setText('AAAAAAAAAAAAAAA')
+                #self.Front_table.setFont(QFont("Helvetica [Cronyx]", 100))
+                #self.Front_table.resize(100, 100)
+                #self.Front_table.move(10,10)
+                #self.Front_table.setStyleSheet("color:rgb(0,255,255); background-color:rgb(255,255,255);")
+                #self.setWindowTitle("QHBoxLayout Example")
+
+                # Create a QHBoxLayout instance
+                #layout = QHBoxLayout()
+                # Add widgets to the layout
+                #layout.addWidget(QPushButton("Left-Most"))
+                #layout.addWidget(QPushButton("Center"), 1)
+                #layout.addWidget(QPushButton("Right-Most"), 2)
+                # Set the layout on the application's window
+                #self.setLayout(layout)
+        """)
+
+
+QWidget {
+            background-color: #FFFFFF;     
+            color: #F30000;
+        }
+
+        QHeaderView::section {
+            background-color: #F30000;
+            padding: 0px;
+            border: 1px solid #FFFFFF;
+            font-size: 16pt;
+        }
+
+        QHeaderView::section:horizontal
+        {
+            border-top: 1px solid #fffff8;
+            background-color: #252526;
+        }
+
+        QHeaderView::section:vertical
+        {
+            border-left: 1px solid #F30000;
+            background-color: #252526;
+        }
+
+        QTableWidget {
+            gridline-color: #000000;
+            border: 0px;
+            background-color: #F30000;
+        }
+
+        QTableWidget QTableCornerButton::section {
+            background-color: #F30000;
+            border: 1px solid #F30000;
+        }"")
+
+
+        QTableWidget::item:selected
+        {
+            background-color: #FFFFFF;
+        }

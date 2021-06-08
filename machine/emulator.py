@@ -1,5 +1,5 @@
 class Turing_machine():
-    def __init__(self, q_n=19, alphabet=[' ']):
+    def __init__(self, q_n=13, alphabet=[' ']):
         self.table = {}
         for i in range(0,q_n+1): self.table[str(i)] = {}
         self.alphabet = alphabet
@@ -12,6 +12,12 @@ class Turing_machine():
 
     def delete_symbol(self, symbol):
         self.alphabet.remove(symbol)
+        for i in self.table:
+            try:
+                del self.table[i][symbol]
+            except KeyError:
+                pass
+        print(self.table)
         return 0
 
     #table functions
@@ -26,31 +32,41 @@ class Turing_machine():
         self.table.pop(str(self.amount_of_states))
         return 0
 
+    def delete_command(self, state, symbol):
+        try:
+            self.table[state][symbol]
+        except KeyError:
+            return
+        del self.table[state][symbol]
+        print("delete_command")
+        print(self.table)
+        return
+
     ##command functions
     def replace_command(self, state, symbol, command):
         #Перевіряємо чи існує такий стан у таблиці
         state = str(state)
         if not state in self.table:
-            print("У таблиці немає cтану", state)
-            return 1
+            #print("У таблиці немає cтану", state)
+            return "У таблиці немає cтану", state
 
         #Перевіряємо чи існує такий символ у абетці
         symbol = str(symbol)
         if not symbol in self.alphabet:
-            print("У абетці немає символу", symbol)
-            return 1
+            #print("У абетці немає символу", symbol)
+            return "У абетці немає символу", symbol
 
         command = str(command)
         if '<' in command:
             command = command.split('<')
 
             if not command[0] in self.alphabet:
-                print("У абетці немає символу", command[0])
-                return 1
+                #print("У абетці немає символу", command[0])
+                return "У абетці немає символу", command[0]
 
             if not command[1] in self.table:
-                print("У таблиці немає cтану", command[1])
-                return 1
+                #print("У таблиці немає cтану", command[1])
+                return "У таблиці немає cтану", command[1]
 
             command.append(command[1])
             command[1] = '<'
@@ -60,12 +76,12 @@ class Turing_machine():
             command = command.split('>')
 
             if not command[0] in self.alphabet:
-                print("У абетці немає символу", command[0])
-                return 1
+                #print("У абетці немає символу", command[0])
+                return "У абетці немає символу", command[0]
 
             if not command[1] in self.table:
-                print("У таблиці немає cтану", command[1])
-                return 1
+                #print("У таблиці немає cтану", command[1])
+                return "У таблиці немає cтану", command[1]
 
             command.append(command[1])
             command[1] = '>'
@@ -75,22 +91,46 @@ class Turing_machine():
             command = command.split('.')
 
             if not command[0] in self.alphabet:
-                print("У абетці немає символу", command[0])
-                return 1
+                #print("У абетці немає символу", command[0])
+                return "У абетці немає символу", command[0]
 
             if not command[1] in self.table:
-                print("У таблиці немає cтану", command[1])
-                return 1
+                #print("У таблиці немає cтану", command[1])
+                return "У таблиці немає cтану", command[1]
 
             command.append(command[1])
             command[1] = '.'
             self.table[state][symbol] = command
 
         else:
-            print("Немає інформації щодо переходу в інший стан")
-            return 1
+            #print("Немає інформації щодо переходу в інший стан")
+            return "Немає інформації щодо переходу в інший стан"
+        
+        print(self.table)
+        return 0
+
+    def delete_symbol(self, symbol):
+        print("delete_symbol", symbol)
+        self.alphabet.remove(symbol)
+        for key in self.table:
+            try:
+                del self.table[key][symbol]
+            except KeyError:
+                pass
+    
+    def command_getter(self, state, symbol):
+        try:
+            print(self.table[str(state)][symbol])
+            return self.table[str(state)][symbol]
+        except KeyError:
+            return ''
 
 
+
+
+#########################################################################
+#                              Emulator                                 #
+#########################################################################
 
 class Turing_machine_emulator():
     def __init__(self, position = 0, state = 1, tape = [" "]*27):
@@ -141,7 +181,10 @@ class Turing_machine_emulator():
 
     def emulate_one_step(self, Turing_machine):
         #self.__print()
-        command = Turing_machine.table[str(self.state)][str(self.tape[self.position])]
+        try:
+            command = Turing_machine.table[str(self.state)][str(self.tape[self.position])]
+        except KeyError:
+            return self.state, self.tape[self.position]
         self.tape[self.position] = command[0]
         if command[1] == '<':
             self.position -= 1

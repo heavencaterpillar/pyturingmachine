@@ -1,9 +1,10 @@
+from typing import Text
 from playsound import playsound
 import os, sys, pathlib, time, copy
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt, QSize
-from PyQt5.QtGui import QPalette, QColor, QFont, QIcon, QPixmap, QKeySequence
+from PyQt5.QtGui import QPalette, QColor, QFont, QIcon, QPixmap, QKeySequence, QBrush
 from PyQt5 import QtCore
 from PyQt5.Qt import QTransform
 
@@ -11,6 +12,7 @@ sys.path.append("")
 
 from machine.emulator import Turing_machine_emulator
 from machine.getmachine import Get_Machine
+from Table.Table import Table_panel
 
 
 class Window(QMainWindow): 
@@ -29,6 +31,9 @@ class Window(QMainWindow):
         self.emulator = Turing_machine_emulator() 
         self.saved_tape = copy.copy(self.emulator.tape)
         self.saved_position = copy.copy(self.emulator.position)
+        
+        #self.alphabet_line 
+        self.Table_panel
 
         self.run_activated = False
         self.pause_activated = False
@@ -59,7 +64,7 @@ class Window(QMainWindow):
         path = current_directory + '/icons/State_text'
         State_text_pic = QPixmap(path)
         State_text = QLabel(self)
-        State_text.resize(137, 27)
+        State_text.resize(140, 27)
         State_text.move(1150+40, Toolbar_y)
         State_text.setPixmap(State_text_pic)
         ############
@@ -86,31 +91,38 @@ class Window(QMainWindow):
         Undertape.move(0,210)
         Undertape.setStyleSheet("background-color:rgb(37,37,38);")
         ############  
+
+        #self.Table_panel = Table(self)
+        #self.Table_panel.resize(1000, 1000)
+        #self.Table_panel.move(100, 500)
          
         ###Table####
-        Back_table = QLabel(self)
-        Back_table.resize(1360, 700)
-        Back_table.move(40,290)
-        Back_table.setStyleSheet("background-color:rgb(37,37,38);")
-
-        Front_table = QLabel(self)
-        Front_table.resize(1300, 655)
-        Front_table.move(100,335)
-        Front_table.setStyleSheet("background-color:rgb(255,255,255);")
+        #layout = QGridLayout()
         
-        lines1 = list()
-        for i in range(0,23):
-            lines1.append(QLabel(self))
-            lines1[i].resize(1, 700)
-            lines1[i].move(100+i*60,290)
-            lines1[i].setStyleSheet("background-color:rgb(0,0,0);")
+        Table = Table_panel(self)
+        self.Table_panel = Table
+        
+        #Temp_1.move(40,335)
+        #Temp_1.resize(1000,1000)
+        #Table = QScrollArea(Back_table)
+        #Table.resize(1360, 250)1);")
+        #temp = self.create_Toolbar_button(74, 36, 31, 25, 110, 340, '/icons/run_button4', self.run_buttonClicked)
+        #Table.setWidget(Front_table)
+        #Table.setWidget(temp)
 
-        lines2 = list()
-        for i in range(0,15):
-            lines2.append(QLabel(self))
-            lines2[i].resize(1360, 1)
-            lines2[i].move(40,335+i*45)
-            lines2[i].setStyleSheet("background-color:rgb(0,0,0);")
+        #lines1 = list()
+        #for i in range(0,23):
+        #    lines1.append(QLabel(self))
+        #    lines1[i].resize(1, 700)
+        #    lines1[i].move(100+i*60,290)
+        #    lines1[i].setStyleSheet("background-color:rgb(0,0,0);")
+
+        #lines2 = list()
+        #for i in range(0,15):
+        #    lines2.append(QLabel(self))
+        #    lines2[i].resize(1360, 1)
+        #    lines2[i].move(40,335+i*45)
+        #    lines2[i].setStyleSheet("background-color:rgb(0,0,0);")
         ############  
 
 
@@ -279,7 +291,7 @@ class Window(QMainWindow):
         x_coord += 74
         x_coord += 37
 
-        ####Step Button####
+        ####Step Button####1
         self.step_button = self.create_Toolbar_button(74, 36, 36, 25, x_coord, y_coord, '/icons/step_button', self.step_buttonClicked)
         ####################
         x_coord += 74
@@ -298,9 +310,53 @@ class Window(QMainWindow):
         self.state_line.setStyleSheet("background-color:rgb(49,54,59); color:rgb(255,0,255);") #37,37,38
         self.state_line.setFont(QFont("Bruno Ace",30))
         self.state_line.setText('1')
+        self.state_line.isUndoAvailable = True
+        self.state_line.editingFinished.connect(self.state_line_edited)
+        
         ################################
 
-       
+    def call_warning_box(self):
+        current_directory = str(pathlib.Path(__file__).parent.absolute())
+        path = current_directory + '/icons/warning'
+        messagebox = QMessageBox(QMessageBox.Warning, "Warning", "Стан може бути тільки цілим числом!", QMessageBox.Ok, parent=self)
+        messagebox.setIconPixmap(QPixmap(path))
+        messagebox.setFont(QFont("Bruno Ace",14))
+        exe = messagebox.exec_()
+
+    def finish_box(self):
+        current_directory = str(pathlib.Path(__file__).parent.absolute())
+        path = current_directory + '/icons/finish_message'
+        messagebox = QMessageBox(QMessageBox.Warning, "Finish", "Емулятор успішно закінчив свою роботу!", QMessageBox.Ok, parent=self)
+        messagebox.setIconPixmap(QPixmap(path))
+        messagebox.setFont(QFont("Bruno Ace",14))
+        exe = messagebox.exec_()
+    
+    def error_finish_box(self, state, symbol):
+        current_directory = str(pathlib.Path(__file__).parent.absolute())
+        path = current_directory + '/icons/error_finish_message'
+        messagebox = QMessageBox(QMessageBox.Warning, "Error", "У стані Q"+str(state)+" немає команди для символу "+"«"+str(symbol)+"»...", QMessageBox.Ok, parent=self)
+        messagebox.setIconPixmap(QPixmap(path))
+        messagebox.setFont(QFont("Bruno Ace",12))
+        exe = messagebox.exec_()
+
+    def state_line_edited(self):
+        try:
+            int(self.state_line.text())
+        except ValueError:
+            self.state_line.setStyleSheet("background-color:rgb(49,54,59); color:rgb(240,20,20);")
+            QApplication.processEvents()
+            time.sleep(0.1)
+            self.state_line.setStyleSheet("background-color:rgb(49,54,59); color:rgb(255,0,255);")
+            self.state_line.setText(str(self.emulator.state))
+            self.call_warning_box()
+        self.state_line.setStyleSheet("background-color:rgb(49,54,59); color:rgb(210,0,210);")
+        QApplication.processEvents()
+        time.sleep(0.1)
+        self.state_line.setStyleSheet("background-color:rgb(49,54,59); color:rgb(255,0,255);")
+        #self.alphabet_line.setStyleSheet("background-color:rgb(0,255,0); color:rgb(78,78,78);")
+        #QApplication.processEvents()
+        #time.sleep(0.1)
+        #self.alphabet_line.setStyleSheet("background-color:rgb(255,255,240); color:rgb(78,78,78);")
 
 
     def displayTape(self):
@@ -320,16 +376,7 @@ class Window(QMainWindow):
         ######### 
          
         ####Left Button####
-        path = current_directory + '/icons/left_button2'
-        left_button_icon = QIcon()
-        left_button_icon.addPixmap(QPixmap(path), QIcon.Normal, QIcon.Off)
-
-        left_button = QPushButton(self)
-        left_button.clicked.connect(self.left_buttonClicked)
-        left_button.resize(45, 80)
-        left_button.move(0, 95)
-        left_button.setIcon(left_button_icon)
-        left_button.setIconSize(QSize(20, 80))
+        left_button = self.create_Toolbar_button(45, 80, 20, 80, 0, 95, '/icons/left_button2', self.left_buttonClicked)
         left_button.setStyleSheet("""
                                 QPushButton::hover {
                                     border: none;
@@ -345,16 +392,7 @@ class Window(QMainWindow):
         #########     
          
         ####Right Button####
-        path = current_directory + '/icons/right_button2'
-        right_button_icon = QIcon()
-        right_button_icon.addPixmap(QPixmap(path), QIcon.Normal, QIcon.Off)
-
-        right_button = QPushButton(self)
-        right_button.clicked.connect(self.right_buttonClicked)
-        right_button.resize(45, 80)
-        right_button.move(1395, 95)
-        right_button.setIcon(right_button_icon)
-        right_button.setIconSize(QSize(20, 80))
+        right_button = self.create_Toolbar_button(45, 80, 20, 80, 1395, 95, '/icons/right_button2', self.right_buttonClicked)
         right_button.setStyleSheet("""
                                 QPushButton::hover {
                                     border: none;
@@ -370,7 +408,6 @@ class Window(QMainWindow):
 
         ####Tape#####
         self.name_entry = list()
-
         for i in range(0,27):     
             self.name_entry.append(QLineEdit(self))
             self.name_entry[i].setAlignment(Qt.AlignCenter) # The default alignmeis AlignLeft
@@ -384,7 +421,7 @@ class Window(QMainWindow):
     def displayUndertape_panel(self):
         return     
 
-        
+
     def input_data(self, Emulator):
         for i in range(len(self.name_entry)):
             done = False
@@ -421,6 +458,10 @@ class Window(QMainWindow):
                 self.name_entry[i].setText('')
             if self.name_entry[i].text() == ' ':
                self.name_entry[i].setText('') 
+
+    ####################################################################################################################
+    #                                                   Buttons clicked functions                                      #
+    ####################################################################################################################
 
     def change_button_icon(self, short_path, size1, size2, button):
         current_directory = str(pathlib.Path(__file__).parent.absolute())
@@ -506,7 +547,7 @@ class Window(QMainWindow):
         self.change_button_icon('/icons/step_button_activated', 36, 25, self.step_button)
         QApplication.processEvents()
         time.sleep(0.05)
-        Machine = Get_Machine()
+        Machine = self.Table_panel.machine
         self.input_data(self.emulator)
         emulate = 1
         current_directory = str(pathlib.Path(__file__).parent.absolute())
@@ -517,12 +558,17 @@ class Window(QMainWindow):
         #playsound(path)
         self.state_line.setText(str(self.emulator.state))
         if emulate == 0:
-            QMessageBox().information(self, "Emulator", "Емулятор успішно закінчив свою роботу!", QMessageBox.Ok, QMessageBox.Ok)
+            self.finish_box()
             self.emulator.state = 1
             self.state_line.setText('1')
+        else:
+            if emulate[1] == " ":
+                self.error_finish_box(emulate[0], "λ")
+            else:
+                self.error_finish_box(emulate[0], emulate[1])
+
         self.change_button_icon('/icons/step_button', 36, 25, self.step_button)
         
-
         return
 
     def stop_buttonClicked(self):
@@ -614,7 +660,7 @@ class Window(QMainWindow):
             QApplication.processEvents()
             time.sleep(0.05)
 
-            Machine = Get_Machine()
+            Machine = self.Table_panel.machine
             self.input_data(self.emulator)
             emulate = 1
             current_directory = str(pathlib.Path(__file__).parent.absolute())
@@ -627,6 +673,7 @@ class Window(QMainWindow):
                     self.state_line.setText(str(self.emulator.state))
                     QApplication.processEvents()
                     return
+
                 if self.stop_activated == True:
                     self.stop_activated = False
                     self.emulator.state = 1
@@ -640,18 +687,27 @@ class Window(QMainWindow):
                     return
                 
                 if self.no_animations == False:
+                    #self.Table_panel.table.item(Machine.alphabet.index(self.emulator.tape[self.emulator.position]), int(self.emulator.state)).setBackground(QBrush(QColor('red'))) #166,255,165
+                    #self.Table_panel.table.item(Machine.alphabet.index(self.emulator.tape[self.emulator.position]), int(self.emulator.state)).setForeground(QBrush(QColor('red')))
                     emulate = self.emulator.emulate_one_step(Machine)
                     self.get_data(self.emulator)
                     self.state_line.setText(str(self.emulator.state))
                     QApplication.processEvents()
-                    #playsound(path)
+                    
                     time.sleep(self.run_speed)
                 else:
                     emulate = self.no_animations_run(Machine)
             
             self.get_data(self.emulator)
             self.emulator.state = 1
-            QMessageBox().information(self, "Emulator", "Емулятор успішно закінчив свою роботу!", QMessageBox.Ok, QMessageBox.Ok)
+
+            if emulate == 0:
+                self.finish_box()
+            else:
+                if emulate[1] == " ":
+                    self.error_finish_box(emulate[0], "λ")
+                else:
+                    self.error_finish_box(emulate[0], emulate[1])
 
             self.change_button_icon('/icons/run_button4', 31, 25, self.run_button)
             self.state_line.setText('1')
@@ -691,7 +747,13 @@ class Window(QMainWindow):
     def state_text_buttonClicked(self):
         return
 
-# Run program
+
+    
+####################################################################################################################
+#                                                   Run program                                                    #
+####################################################################################################################
+
+
 if __name__ == '__main__':
 	palette = QPalette()
 	palette.setColor(QPalette.Window, QColor(39, 41, 45))

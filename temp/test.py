@@ -1,5 +1,7 @@
-tape = [" "]*27
-tap = dict() #лента эмулятора
-for i in range(-13, len(tape)//2 + 1):
-    tap[i] = tape[i+13]
-print(tap)
+new_menu = ['Hawaiian', 'Margherita', 'Mushroom', 'Prosciutto', 'Meat Feast', 'Hawaiian', 'Bacon', 'Black Olive Special', 'Sausage', 'Sausage']
+
+final_new_menu = list(dict.fromkeys(new_menu))
+
+print(type(final_new_menu))
+
+final_new_menu.remove('1')
