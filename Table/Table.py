@@ -84,7 +84,7 @@ class Table_panel(QLabel):
             if i in old_symbols:
                 pass
             else:
-                print(i)
+                #print(i)
                 self.machine.delete_symbol(i)
         
         try:
@@ -102,7 +102,7 @@ class Table_panel(QLabel):
 
         self.alphabet_line.setText(("").join(new_alphabet[0:len(new_alphabet)-1]))
         self.machine.alphabet = new_alphabet
-        print(self.machine.alphabet)
+        #print(self.machine.alphabet)
 
         self.updateTable_rows()
 
@@ -171,10 +171,10 @@ class Table_panel(QLabel):
         QApplication.processEvents()
         time.sleep(0.05)
 
-        print(self.table.columnCount())
+        #print(self.table.columnCount())
         length = self.table.columnCount()
         self.table.insertColumn(length)
-        print(self.table.columnCount())
+        #print(self.table.columnCount())
 
         Font = QFont("Roboto",12)
         Font.setBold(True)
@@ -214,8 +214,8 @@ class Table_panel(QLabel):
     
     def initTable(self, rows = 0, columns = 13):
         self.table = QTableWidget(rows, columns, self)
-        self.table.resize(1360, 700)
-        self.table.move(40, 45)
+        self.table.resize(1360, 695)
+        self.table.move(40, 50)
         
         self.table.setStyleSheet("""
         QTableWidget
@@ -292,8 +292,10 @@ class Table_panel(QLabel):
 
     def itemChanged(self, item):
         if self.text_change_again:
+            #print("Does not change")
             self.text_change_again = False
             return
+        #print(item.text())
         state = str(item.column()+1)
         symbol = self.machine.alphabet[item.row()]
         command = item.text()
@@ -301,20 +303,79 @@ class Table_panel(QLabel):
         if len(command) == 0:
             self.machine.delete_command(state, symbol)
             return
-        if command[0] == 'λ':
-            command = list(command)
-            command[0] = "λ"
-            command = "".join(command)
+
+        if len(command) >= 2: 
+            if '<' == command[0] and ('<' == command[1] or '.' == command[1] or '>' == command[1]): 
+                command = split(command)
+                command[0] = "\u034A"
+                command = "".join(command)
+            elif '>' == command[0] and ('<' == command[1] or '.' == command[1] or '>' == command[1]): 
+                command = split(command)
+                command[0] = "\u034B"
+                command = "".join(command)
+            elif '.' == command[0] and ('<' == command[1] or '.' == command[1] or '>' == command[1]): 
+                command = split(command)
+                command[0] = "\u034C"
+                command = "".join(command)
+
+        if '<' in command: 
+            command = command.split('<')
+            goto = '<'
+        elif '>' in command:
+            command = command.split('>')
+            goto = '>'
+        elif '.' in command:
+            command = command.split('.')
+            goto = '.'
+        else:
+            self.call_warning_box("Немає інформації щодо переходу в інший стан"+'!')
+            self.machine.delete_command(state, symbol)
+            self.text_change_again = True
+            item.setText('a') 
+            self.text_change_again = True
+            item.setText('')
+            return
+            
+
+        if command[0] == '' and command[1] == '':
+            command = symbol+goto+state
+        elif command[0] == '':
+            command = symbol+goto+command[1]               
+        elif command[1] == '':
+            command = command[0]+goto+state
+        else:
+            command = command[0]+goto+command[1]
+         
         result = self.machine.replace_command(state, symbol, command)
        
-        print(result)
-        if result == 0:
+        #print(result)
+        if result == 0:  
             if ' ' == command[0]:
                 command = list(command)
                 command[0] = "λ"
                 command = "".join(command)
                 self.text_change_again = True
+                item.setText('a') 
+                self.text_change_again = True
                 item.setText(command)
+            else:
+                if command[0] == "\u034A":
+                    command = list(command)
+                    command[0] = '<'
+                    command = "".join(command)  
+                elif command[0] == "\u034B":
+                    command = list(command)
+                    command[0] = '>'
+                    command = "".join(command)
+                elif command[0] == "\u034C":
+                    command = list(command)
+                    command[0] = '.'
+                    command = "".join(command)
+                self.text_change_again = True
+                item.setText('a') 
+                self.text_change_again = True
+                item.setText(command)
+
             return
         
         else:
@@ -323,10 +384,14 @@ class Table_panel(QLabel):
                     self.call_warning_box(result[0]+' «'+str(result[1])+'»!')
                     self.machine.delete_command(state, symbol)
                     self.text_change_again = True
+                    item.setText('a') 
+                    self.text_change_again = True
                     item.setText('')
                 else:
                     self.call_warning_box(result[0]+' Q'+str(result[1])+'!')
                     self.machine.delete_command(state, symbol)
+                    self.text_change_again = True
+                    item.setText('a') 
                     self.text_change_again = True
                     item.setText('')
                     
@@ -334,14 +399,16 @@ class Table_panel(QLabel):
                 self.call_warning_box(result+'!')
                 self.machine.delete_command(state, symbol)
                 self.text_change_again = True
+                item.setText('a') 
+                self.text_change_again = True
                 item.setText('')
 
 
     def updateTable(self):
         Font = QFont("Roboto",12)
         Font.setBold(True)
-        print("updateTable")
-        print(self.machine.table)
+        #print("updateTable")
+        #print(self.machine.table)
 
         for column in range(0, self.table.columnCount()):
            for row in range(0, self.table.rowCount()):
@@ -355,7 +422,7 @@ class Table_panel(QLabel):
                self.table.item(row, column).setTextAlignment(Qt.AlignCenter)
                self.text_change_again = True
                self.table.item(row, column).setFont(Font)
-        print("updateTable end")
+        #print("updateTable end")
         return
         
     def updateTable_rows(self):

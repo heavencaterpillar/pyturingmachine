@@ -1,8 +1,8 @@
 from typing import Text
 from playsound import playsound
-import os, sys, pathlib, time, copy
+import os, sys, pathlib, time, copy, pickle
 
-from PyQt5.QtWidgets import *
+from PyQt5.QtWidgets import * 
 from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtGui import QPalette, QColor, QFont, QIcon, QPixmap, QKeySequence, QBrush
 from PyQt5 import QtCore
@@ -38,6 +38,9 @@ class Window(QMainWindow):
         self.run_activated = False
         self.pause_activated = False
         self.stop_activated = False
+
+        self.file_path = None
+        self.file_label = None
 
 
 
@@ -132,6 +135,10 @@ class Window(QMainWindow):
         exit_act.setShortcut('Ctrl+Q')
         exit_act.triggered.connect(self.close)
 
+        save = QAction('Save', self)
+        save.setShortcut('Ctrl+S')
+        save.triggered.connect(self.file_save)
+
         speed_025 = QAction('0.25x', self)
         speed_05 = QAction('0.5x', self)
         speed_1 = QAction('1x', self)
@@ -197,9 +204,14 @@ class Window(QMainWindow):
         speed_menu.addAction(speed_max)
         speed_menu.addAction(speed_beyond_max)
         
+        file_menu.addAction(save)
         file_menu.addAction(exit_act)
+        
+####################################################################################################################
+#                                                      Menu functions                                              #
+####################################################################################################################
 
-    ##Menu functions####
+    ##Speed functions####
     def speed_025x(self):
         self.run_speed = 1 
         self.no_animations = False
@@ -228,7 +240,47 @@ class Window(QMainWindow):
         self.run_speed = 0
         self.no_animations = True
     ###################
-    
+
+    def create_file_label(self, path):
+        file_name = "/home/anton/Projects/pyturingmachine/temp/rr.pkl"
+        file_name = file_name.split('/')
+        file_name[-1] = file_name[-1].split('.')
+        print(file_name)
+        print(file_name[-1][0])
+
+        #size1 = 
+
+    ####File functions####
+    def file_save(self):
+        if self.run_activated == True:
+            self.information_box("Не можливо зберегти файл під час роботи емулятора!")
+            return
+        
+        if self.file_path == None:
+            file_dialog = QFileDialog(self)
+            file_dialog.setNameFilter("*.pkl")
+            file_name = file_dialog.getSaveFileName(self, "Open a file", "", "(*.pkl)")
+            self.file_path = file_name[0]
+        
+            with open(self.file_path, 'wb') as output:
+                info = Save_to_file(copy.copy(self.emulator), self.saved_tape, self.saved_position, self.Table_panel.machine)
+                pickle.dump(info, output)
+                del info
+
+            #self.
+        
+        else:
+            with open(self.file_path, 'wb') as output:
+                info = Save_to_file(copy.copy(self.emulator), self.saved_tape, self.saved_position, self.Table_panel.machine)
+                pickle.dump(info, output)
+                del info
+
+
+
+    #def file_download(self):
+        #file_name = QFileDialog.getOpenFileName(self, "Open a file")
+
+    #####################
 
     def create_Toolbar_button(self, size1, size2, icon_size1, icon_size2, x, y, short_path, connection):
         current_directory = str(pathlib.Path(__file__).parent.absolute())
@@ -255,70 +307,78 @@ class Window(QMainWindow):
         return button 
 
     def displayToolbar(self):
-        y_coord = 30
+        y_coord = 25
         x_coord = 0 
         #create_Toolbar_button(self, size1, size2, icon_size1, icon_size2, x, y, short_path)
 
         ####Run Button####
-        self.run_button = self.create_Toolbar_button(74, 36, 31, 25, x_coord, y_coord, '/icons/run_button4', self.run_buttonClicked)
+        self.run_button = self.create_Toolbar_button(74, 41, 31, 25, x_coord, y_coord, '/icons/run_button4', self.run_buttonClicked)
         ##################
         x_coord += 74
 
         ###Pause Button###
-        self.pause_button = self.create_Toolbar_button(74, 36, 14, 25, x_coord, y_coord, '/icons/pause_button', self.pause_buttonClicked)
+        self.pause_button = self.create_Toolbar_button(74, 41, 14, 25, x_coord, y_coord, '/icons/pause_button', self.pause_buttonClicked)
         ##################
         x_coord += 74
 
         ####Stop Button####
-        self.stop_button = self.create_Toolbar_button(74, 36, 20, 25, x_coord, y_coord, '/icons/stop_button5', self.stop_buttonClicked)
+        self.stop_button = self.create_Toolbar_button(74, 41, 20, 25, x_coord, y_coord, '/icons/stop_button5', self.stop_buttonClicked)
         ###################
         x_coord += 74
         x_coord += 37
 
         ####Save Button####
-        self.save_button = self.create_Toolbar_button(74, 36, 25, 25, x_coord, y_coord, '/icons/save_button', self.save_buttonClicked)
+        self.save_button = self.create_Toolbar_button(74, 41, 25, 25, x_coord, y_coord, '/icons/save_button', self.save_buttonClicked)
         ###################
         x_coord += 74
         
         ####Reset Button####
-        self.reset_button = self.create_Toolbar_button(74, 36, 25, 25, x_coord, y_coord, '/icons/reset_button', self.reset_buttonClicked)
+        self.reset_button = self.create_Toolbar_button(74, 41, 25, 25, x_coord, y_coord, '/icons/reset_button', self.reset_buttonClicked)
         ####################
         x_coord += 74
 
         ####Clear Button####
-        self.clear_button = self.create_Toolbar_button(74, 36, 25, 25, x_coord, y_coord, '/icons/clear_button', self.clear_buttonClicked)
+        self.clear_button = self.create_Toolbar_button(74, 41, 25, 25, x_coord, y_coord, '/icons/clear_button', self.clear_buttonClicked)
         ####################
         x_coord += 74
         x_coord += 37
 
         ####Step Button####1
-        self.step_button = self.create_Toolbar_button(74, 36, 36, 25, x_coord, y_coord, '/icons/step_button', self.step_buttonClicked)
+        self.step_button = self.create_Toolbar_button(74, 41, 36, 25, x_coord, y_coord, '/icons/step_button', self.step_buttonClicked)
         ####################
         x_coord += 74
 
         ####Fisrt state Button####
-        self.first_state_button = self.create_Toolbar_button(74, 36, 25, 25, x_coord, y_coord, '/icons/first_state_button', self.first_state_buttonClicked)
+        self.first_state_button = self.create_Toolbar_button(74, 41, 25, 25, x_coord, y_coord, '/icons/first_state_button', self.first_state_buttonClicked)
         ####################
         x_coord += 74
 
         ###########State line###########
         self.state_line = QLineEdit(self)
         self.state_line.setAlignment(Qt.AlignCenter) # The default alignmeis AlignLeft
-        self.state_line.move(1150+137+5+40, y_coord-2)
+        self.state_line.move(1150+137+5+40, y_coord+3)
         self.state_line.resize(74, 30) # Change size of entry field
         self.state_line.setMaxLength(4)
-        self.state_line.setStyleSheet("background-color:rgb(49,54,59); color:rgb(255,0,255);") #37,37,38
+        self.state_line.setStyleSheet("background-color:rgb(49,54,59); color:rgb(255,0,255);") #37,37,38 #49,54,59
         self.state_line.setFont(QFont("Bruno Ace",30))
         self.state_line.setText('1')
         self.state_line.isUndoAvailable = True
-        self.state_line.editingFinished.connect(self.state_line_edited)
-        
+        self.state_line.editingFinished.connect(self.state_line_edited)    
         ################################
+
 
     def call_warning_box(self):
         current_directory = str(pathlib.Path(__file__).parent.absolute())
         path = current_directory + '/icons/warning'
         messagebox = QMessageBox(QMessageBox.Warning, "Warning", "Стан може бути тільки цілим числом!", QMessageBox.Ok, parent=self)
+        messagebox.setIconPixmap(QPixmap(path))
+        messagebox.setFont(QFont("Bruno Ace",14))
+        exe = messagebox.exec_()
+
+    def information_box(self, message_text):
+        current_directory = str(pathlib.Path(__file__).parent.absolute())
+        path = current_directory + '/icons/information'
+        messagebox = QMessageBox(QMessageBox.Warning, "Information", message_text, QMessageBox.Ok, parent=self)
         messagebox.setIconPixmap(QPixmap(path))
         messagebox.setFont(QFont("Bruno Ace",14))
         exe = messagebox.exec_()
@@ -339,7 +399,14 @@ class Window(QMainWindow):
         messagebox.setFont(QFont("Bruno Ace",12))
         exe = messagebox.exec_()
 
+     
+
     def state_line_edited(self):
+        #if self.run_activated == True:
+        #    self.state_line.setText(str(self.emulator.state))
+        #    QApplication.processEvents()
+        #    self.information_box("Ви не змінити стан під час роботи емулятора!")
+        #    return
         try:
             int(self.state_line.text())
         except ValueError:
@@ -473,6 +540,14 @@ class Window(QMainWindow):
     
 
     def left_buttonClicked(self):
+        if self.run_activated == True:
+            self.change_button_icon('/icons/left_button2_activated', 20, 80, self.left_button)
+            QApplication.processEvents()
+            time.sleep(0.01)
+            self.change_button_icon('/icons/left_button2', 20, 80, self.left_button)
+            QApplication.processEvents()
+            self.information_box("Ви не можете змістити ленту вліво під час роботи емулятора!")
+            return
         self.change_button_icon('/icons/left_button2_activated', 20, 80, self.left_button)
         QApplication.processEvents()
         time.sleep(0.05)
@@ -484,6 +559,14 @@ class Window(QMainWindow):
         self.change_button_icon('/icons/left_button2', 20, 80, self.left_button)
 
     def right_buttonClicked(self):
+        if self.run_activated == True:
+            self.change_button_icon('/icons/right_button2_activated', 20, 80, self.right_button)
+            QApplication.processEvents()
+            time.sleep(0.01)
+            self.change_button_icon('/icons/right_button2', 20, 80, self.right_button)
+            QApplication.processEvents()
+            self.information_box("Ви не можете змістити ленту вправо під час роботи емулятора!")
+            return
         self.change_button_icon('/icons/right_button2_activated', 20, 80, self.right_button)
         QApplication.processEvents()
         time.sleep(0.05)
@@ -526,10 +609,10 @@ class Window(QMainWindow):
         if self.run_activated == True:
             self.change_button_icon('/icons/clear_button_activated', 14, 25, self.clear_button)
             QApplication.processEvents()
-            time.sleep(0.05)
+            time.sleep(0.01)
             self.change_button_icon('/icons/clear_button', 25, 25, self.clear_button)
             QApplication.processEvents()
-            QMessageBox().information(self, "Clear", "Ви не можете стерти ленту під час роботи емулятора!", QMessageBox.Ok, QMessageBox.Ok)
+            self.information_box("Ви не можете стерти ленту під час роботи емулятора!")
             return
         self.change_button_icon('/icons/clear_button_activated', 14, 25, self.clear_button)
         QApplication.processEvents()
@@ -544,6 +627,15 @@ class Window(QMainWindow):
         return
 
     def step_buttonClicked(self):
+        if self.run_activated == True:
+            self.change_button_icon('/icons/step_button_activated', 36, 25, self.step_button)
+            QApplication.processEvents()
+            time.sleep(0.01)
+            self.change_button_icon('/icons/step_button', 36, 25, self.step_button)
+            QApplication.processEvents()
+            self.information_box("Емулятор вже запущений!")
+            return
+
         self.change_button_icon('/icons/step_button_activated', 36, 25, self.step_button)
         QApplication.processEvents()
         time.sleep(0.05)
@@ -561,7 +653,7 @@ class Window(QMainWindow):
             self.finish_box()
             self.emulator.state = 1
             self.state_line.setText('1')
-        else:
+        elif emulate != 1:
             if emulate[1] == " ":
                 self.error_finish_box(emulate[0], "λ")
             else:
@@ -608,7 +700,7 @@ class Window(QMainWindow):
                 QApplication.processEvents()
                 
                 self.change_button_icon('/icons/run_button4', 31, 25, self.run_button)
-                return
+                return emulate
 
             if self.stop_activated == True:
                 self.stop_activated = False
@@ -624,7 +716,7 @@ class Window(QMainWindow):
                 time.sleep(0.05)
                 self.change_button_icon('/icons/stop_button5', 25, 25, self.stop_button)
                 self.run_activated = False
-                return
+                return emulate
 
             if self.no_animations == True:
                 emulate = self.emulator.emulate_one_step(Machine)
@@ -652,6 +744,7 @@ class Window(QMainWindow):
 
     def run_buttonClicked(self):
         if self.run_activated == False:
+            self.state_line.setReadOnly(True)
             if self.pause_activated == True:
                 self.pause_activated = False
                 self.change_button_icon('/icons/pause_button', 14, 25, self.pause_button)
@@ -668,6 +761,7 @@ class Window(QMainWindow):
             while (emulate == 1):
                 if self.pause_activated == True:
                     self.run_activated = False
+                    self.state_line.setReadOnly(False)
                     self.change_button_icon('/icons/run_button4', 31, 25, self.run_button)
                     self.get_data(self.emulator)
                     self.state_line.setText(str(self.emulator.state))
@@ -681,6 +775,7 @@ class Window(QMainWindow):
                     time.sleep(0.05)
                     self.change_button_icon('/icons/stop_button5', 25, 25, self.stop_button)
                     self.run_activated = False
+                    self.state_line.setReadOnly(False)
                     self.get_data(self.emulator)
                     self.state_line.setText(str(self.emulator.state))
                     QApplication.processEvents()
@@ -712,10 +807,19 @@ class Window(QMainWindow):
             self.change_button_icon('/icons/run_button4', 31, 25, self.run_button)
             self.state_line.setText('1')
             self.run_activated = False
+            self.state_line.setReadOnly(False)
         else: 
             return
     
     def reset_buttonClicked(self):
+        if self.run_activated == True:
+            self.change_button_icon('/icons/clear_button_activated', 14, 25, self.reset_button)
+            QApplication.processEvents()
+            time.sleep(0.01)
+            self.change_button_icon('/icons/clear_button', 25, 25, self.reset_button)
+            QApplication.processEvents()
+            self.information_box("Ви не можете відновити ленту під час роботи емулятора!")
+            return
         self.change_button_icon('/icons/reset_button_activated', 20, 25, self.reset_button)
         QApplication.processEvents()
         time.sleep(0.05)
@@ -726,6 +830,14 @@ class Window(QMainWindow):
         self.change_button_icon('/icons/reset_button', 25, 25, self.reset_button)
         
     def first_state_buttonClicked(self):
+        if self.run_activated == True:
+            self.change_button_icon('/icons/first_state_button_activated', 20, 25, self.first_state_button)
+            QApplication.processEvents()
+            time.sleep(0.01)
+            self.change_button_icon(('/icons/first_state_button', 25, 25, self.first_state_button))
+            QApplication.processEvents()
+            self.information_box("Ви не змінити стан під час роботи емулятора!")
+            return
         self.change_button_icon('/icons/first_state_button_activated', 20, 25, self.first_state_button)
         self.state_line.setText('1')
         QApplication.processEvents()
@@ -734,6 +846,14 @@ class Window(QMainWindow):
         self.change_button_icon('/icons/first_state_button', 25, 25, self.first_state_button)
 
     def save_buttonClicked(self):
+        if self.run_activated == True:
+            self.change_button_icon('/icons/clear_button_activated', 14, 25, self.save_button)
+            QApplication.processEvents()
+            time.sleep(0.05)
+            self.change_button_icon('/icons/clear_button', 25, 25, self.save_button)
+            QApplication.processEvents()
+            self.information_box("Ви не можете зберенти ленту під час роботи емулятора!")
+            return
         self.change_button_icon('/icons/save_button_activated', 20, 25, self.save_button)
         QApplication.processEvents()
         
@@ -747,7 +867,15 @@ class Window(QMainWindow):
     def state_text_buttonClicked(self):
         return
 
-
+####################################################################################################################
+#                                                   File class                                                     #
+####################################################################################################################
+class Save_to_file():
+    def __init__(self, emulator, tape, position, machine):
+        self.emulator = emulator
+        self.emulator.tape = tape
+        self.emulator.position = position
+        self.machine = machine
     
 ####################################################################################################################
 #                                                   Run program                                                    #

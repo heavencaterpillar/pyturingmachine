@@ -1,7 +1,5 @@
-new_menu = ['Hawaiian', 'Margherita', 'Mushroom', 'Prosciutto', 'Meat Feast', 'Hawaiian', 'Bacon', 'Black Olive Special', 'Sausage', 'Sausage']
-
-final_new_menu = list(dict.fromkeys(new_menu))
-
-print(type(final_new_menu))
-
-final_new_menu.remove('1')
+my_str = "/home/anton/Projects/pyturingmachine/temp/rr.pkl"
+my_str = my_str.split('/')
+my_str[-1] = my_str[-1].split('.')
+print(my_str)
+print(my_str[-1][0])
