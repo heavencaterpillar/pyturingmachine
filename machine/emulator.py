@@ -127,12 +127,16 @@ class Turing_machine():
 
 
 
+<<<<<<< HEAD
 
 #########################################################################
 #                              Emulator                                 #
 #########################################################################
 
 class Turing_machine_emulator():
+=======
+class Turing_machine_emulator(Turing_machine):
+>>>>>>> 542e83900dd9ef0befa59af63e317a6ca556c10d
     def __init__(self, position = 0, state = 1, tape = [" "]*27):
         self.tape = dict() #лента эмулятора
         for i in range(-13, len(tape) // 2 + 1):
