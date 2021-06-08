@@ -242,32 +242,45 @@ class Window(QMainWindow):
     ###################
 
     def create_file_label(self, path):
-        file_name = "/home/anton/Projects/pyturingmachine/temp/rr.pkl"
+        file_name = path
         file_name = file_name.split('/')
         file_name[-1] = file_name[-1].split('.')
-        print(file_name)
-        print(file_name[-1][0])
+        file_name = file_name[-1][0]
 
-        #size1 = 
+        print("Hello")
+        self.file_label = QLabel(self)
+        self.file_label.resize(60+len(file_name)*5, 40)
+        self.file_label.move(0, 210) 
+        self.file_label.setStyleSheet("background-color:rgb(39,41,45); ; color:#00D1FF") #background-color:rgb(39,41,45);       
+        self.file_label.show()
+        print("Hello")
+
+        Font = QFont("Roboto",22)
+        self.file_label.setFont(Font)
+        self.file_label.setText(file_name)
+        self.file_label.setAlignment(Qt.AlignCenter)
+        return
 
     ####File functions####
     def file_save(self):
         if self.run_activated == True:
             self.information_box("Не можливо зберегти файл під час роботи емулятора!")
             return
-        
+
         if self.file_path == None:
             file_dialog = QFileDialog(self)
             file_dialog.setNameFilter("*.pkl")
             file_name = file_dialog.getSaveFileName(self, "Open a file", "", "(*.pkl)")
             self.file_path = file_name[0]
+
+            print(self.file_path)
         
             with open(self.file_path, 'wb') as output:
                 info = Save_to_file(copy.copy(self.emulator), self.saved_tape, self.saved_position, self.Table_panel.machine)
                 pickle.dump(info, output)
                 del info
 
-            #self.
+            self.create_file_label(self.file_path)
         
         else:
             with open(self.file_path, 'wb') as output:
