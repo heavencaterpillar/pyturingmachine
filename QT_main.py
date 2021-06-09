@@ -239,7 +239,7 @@ class Window(QMainWindow):
 
     ##################File functions##############
     def create_file_label(self, path):
-        
+        self.file_label.hide()
         file_name = 'unnamed'
         file_name = copy.copy(path)
         file_name = file_name.split('/')
@@ -334,6 +334,7 @@ class Window(QMainWindow):
                 self.emulator.position = copy.copy(self.saved_position)
                 self.emulator.state = 1
                 #del info
+        self.Table_panel.alphabet_line.setText(("").join(self.Table_panel.machine.alphabet))
         self.update_data()
 
 
@@ -356,6 +357,7 @@ class Window(QMainWindow):
         self.Table_panel.machine = self.decoder.Dikarev_decoder(self.file_path)
         self.Table_panel.machine.alphabet.remove(' ')
         self.Table_panel.machine.alphabet.append(' ')
+        print(self.Table_panel.machine.alphabet)
         self.Table_panel.alphabet_line.setText(("").join(self.Table_panel.machine.alphabet[0:len(self.Table_panel.machine.alphabet)-1]))
         self.create_file_label(self.file_path)
         self.file_path = None

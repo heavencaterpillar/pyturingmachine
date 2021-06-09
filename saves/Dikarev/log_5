@@ -1,0 +1,294 @@
+NoName ;  log2_5
+0 q1:q1 0 L
+0 q2:q3 0 R
+0 q3:! 0 S
+0 q4:q4 0 L
+0 q8:q8 0 R
+0 q9:q10 a L
+0 q10:q10 0 L
+0 q11:q11 0 L
+0 q12:q12 0 R
+0 q14:q14 0 L
+0 q16:q16 0 R
+0 q17:q19 1 L
+0 q18:q18 0 L
+0 q19:q19 1 L
+0 q20:q20 0 L
+0 q21:q21   R
+0 q23:q23 0 L
+0 q29:q29 0 R
+0 q30:q30 A R
+0 q40:q40 0 L
+0 q41:q41 0 L
+0 q42:q43 a L
+0 q43:q43 0 L
+0 q44:q44 0 L
+0 q45:q45 0 L
+0 q46:q46 0 L
+0 q47:q47 0 R
+0 q49:q49 0 R
+0 q50:q51 a L
+0 q51:q51 0 L
+0 q52:q53 A R
+0 q53:q53 0 R
+0 q54:q54 0 L
+0 q55:q56 a L
+0 q56:q56 0 L
+0 q57:q58 x R
+0 q58:q58 0 R
+0 q59:q59 0 L
+0 q60:q58 y R
+0 q61:q58 1 R
+0 q62:q62 0 L
+0 q63:q63 0 R
+0 q64:q64 0 L
+0 q65:q65 0 R
+0 q66:q66   L
+0 q67:q67   R
+0 q68:q69   R
+0 q69:q71 0 L
+0 q70:q72 0 L
+0 q73:q68 0 S
+0 q74:q74 0 R
+0 q75:q37 0 L
+0 q77:q78   L
+0 q78:q78 0 L
+0 q79:q79 0 R
+0 q80:q80   R
+0 q82:q83   R
+0 q83:q83 0 R
+0 q84:q85 1 L
+0 q85:q85 0 L
+0 q88:q91   L
+1 q1:q1 1 L
+1 q2:q7 1 L
+1 q8:q8 1 R
+1 q9:q11 b L
+1 q10:q10 1 L
+1 q11:q11 1 L
+1 q12:q12 1 R
+1 q14:q14 1 L
+1 q16:q16 1 R
+1 q17:q18 0 L
+1 q18:q20 1 L
+1 q19:q20 0 L
+1 q20:q20 1 L
+1 q21:q21   R
+1 q23:q23 1 L
+1 q29:q29 1 R
+1 q30:q30 B R
+1 q40:q40 1 L
+1 q41:q41 1 L
+1 q42:q44 b L
+1 q43:q43 1 L
+1 q44:q44 1 L
+1 q45:q45 1 L
+1 q46:q46 1 L
+1 q47:q47 1 R
+1 q49:q49 1 R
+1 q50:q54 b L
+1 q51:q51 1 L
+1 q52:q53 B R
+1 q53:q53 1 R
+1 q54:q54 1 L
+1 q55:q59 b L
+1 q56:q56 1 L
+1 q57:q58 y R
+1 q58:q58 1 R
+1 q59:q59 1 L
+1 q60:q61 x L
+1 q61:q61 0 L
+1 q62:q62 1 L
+1 q63:q63 1 R
+1 q64:q64 1 L
+1 q65:q65 1 R
+1 q66:q66   L
+1 q67:q67   R
+1 q68:q70   R
+1 q69:q71 1 L
+1 q70:q72 1 L
+1 q73:q68 1 S
+1 q74:q74 1 R
+1 q75:q37 1 L
+1 q77:q78   L
+1 q78:q78 1 L
+1 q79:q79 1 R
+1 q80:q80   R
+1 q82:q83   R
+1 q83:q83 1 R
+1 q84:q84 0 L
+1 q85:q85 1 L
+1 q86:q87   L
+1 q88:q89   L
+= q9:q13 = R
+= q10:q10 = L
+= q11:q11 = L
+= q12:q12 = R
+= q14:q14 = L
+= q16:q17 = L
+= q21:q22 = L
+= q51:q52 = L
+= q53:q53 = R
+= q55:q62 = L
+= q56:q57 = L
+= q58:q58 = R
+= q59:q60 = L
+= q62:q62 = L
+= q63:q52 = L
+= q64:q64 = L
+= q65:q65 = R
+= q66:q67   R
+= q80:q81 = L
+= q83:q84 = L
+a q12:q9 a L
+a q13:q13 0 R
+a q47:q42 a L
+a q48:q48 0 R
+a q53:q50 0 L
+a q58:q55 0 L
+a q63:q52 a L
+b q12:q9 b L
+b q13:q13 1 R
+b q47:q42 b L
+b q48:q48 1 R
+b q53:q50 1 L
+b q58:q55 1 L
+| q16:q16 | R
+| q18:q21 | R
+| q20:q20 | L
+| q22:q23 | L
+| q29:q30 | R
+| q30:q37 | L
+| q39:q77 | L
+| q40:q40 | L
+| q41:q41 | L
+| q43:q45 | L
+| q44:q46 | L
+| q47:q47 | R
+| q48:q50 | L
+| q49:q42 | L
+| q50:q64 | L
+| q51:q51 | L
+| q53:q53 | R
+| q54:q55 | L
+| q67:q68 | L
+| q69:q71 | L
+| q70:q72 | L
+| q74:q75 | R
+| q79:q80   R
+| q80:q80   R
+A q37:q38 0 L
+A q38:q40 A L
+A q39:q41 A L
+A q40:q40 A L
+A q41:q41 A L
+A q43:q43 A L
+A q44:q44 A L
+A q52:q52 A L
+A q53:q53 A R
+A q57:q57 A L
+A q58:q58 A R
+A q60:q60 A L
+A q62:q62 A L
+A q63:q52 A L
+A q64:q64 0 L
+A q75:q75 A R
+B q37:q39 1 L
+B q38:q40 B L
+B q39:q41 B L
+B q40:q40 B L
+B q41:q41 B L
+B q43:q43 B L
+B q44:q44 B L
+B q52:q52 B L
+B q53:q53 B R
+B q57:q57 B L
+B q58:q58 B R
+B q60:q60 B L
+B q62:q62 B L
+B q63:q52 B L
+B q64:q64 1 L
+B q75:q75 B R
+x q57:q57 x L
+x q58:q58 x R
+x q60:q60 x L
+x q62:q62 0 L
+y q57:q57 y L
+y q58:q58 y R
+y q60:q60 y L
+y q62:q62 1 L
+* q42:q48 * R
+* q47:q47 * R
+* q50:q64 * L
+* q51:q51 * L
+* q53:q53 * R
+* q54:q55 * L
+* q60:q60 * L
+! q42:q48 ! R
+! q43:q43 ! L
+! q44:q44 ! L
+! q47:q47 ! R
+! q50:q64 ! L
+! q51:q51 ! L
+! q53:q53 ! R
+! q54:q55 ! L
+! q65:q66   L
+! q73:q74   R
+! q82:q86   R
+  q1:q2   R
+  q3:q4   L
+  q4:q5 = L
+  q5:q6 1 L
+  q6:! 1 S
+  q7:q8 = R
+  q8:q9   L
+  q10:q12 0 R
+  q11:q12 1 R
+  q13:q14   L
+  q14:q15 | L
+  q15:q16 0 R
+  q20:q16 0 R
+  q22:q22   L
+  q23:q24 1 L
+  q24:q25 | L
+  q25:q26 1 L
+  q26:q27 0 L
+  q27:q29 1 R
+  q40:q49 ! R
+  q41:q49 * R
+  q43:q45   S
+  q44:q46   S
+  q45:q47 0 R
+  q46:q47 1 R
+  q47:q47   R
+  q51:q52 = L
+  q52:q53 A R
+  q55:q62 = L
+  q57:q58 x R
+  q59:q60 = L
+  q60:q58 y R
+  q61:q58 1 R
+  q62:q63   R
+  q64:q65 ! R
+  q67:q67   R
+  q68:q68   L
+  q69:q69   R
+  q70:q70   R
+  q71:q73 0 L
+  q72:q73 1 L
+  q73:q73   L
+  q74:q74   R
+  q78:q79 ! R
+  q79:q79   R
+  q80:q80   R
+  q81:q82 0 L
+  q82:q82   L
+  q83:q83   R
+  q84:q85 1 L
+  q85:q82   L
+  q86:q86   R
+  q87:q88 1 R
+  q88:q88   R
+  q89:q90 1 R
+  q90:! . R
+  q91:q90 0 R

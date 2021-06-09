@@ -413,13 +413,12 @@ class Table_panel(QLabel):
 
         for column in range(0, self.table.columnCount()):
            for row in range(0, self.table.rowCount()):
-               print('Q'+str(column+1), self.machine.alphabet[row])
-               item_text = self.machine.command_getter(column+1, self.machine.alphabet[row])
+               item_text = copy.copy(self.machine.command_getter(column+1, self.machine.alphabet[row]))
                if item_text != '':
                    if item_text[0] == ' ':
                        item_text[0] = 'λ'
                item_text = ("").join(item_text)
-               print(item_text)
+               
                self.text_change_again = True
                self.table.setItem(row, column, QTableWidgetItem(item_text))
                self.text_change_again = True
