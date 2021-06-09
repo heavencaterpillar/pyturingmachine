@@ -12,6 +12,7 @@ sys.path.append("")
 
 from machine.emulator import Turing_machine_emulator
 from machine.getmachine import Get_Machine
+from machine.decoder import Decoder
 from Table.Table import Table_panel
 
 
@@ -42,7 +43,7 @@ class Window(QMainWindow):
         self.file_path = None
         self.file_label = None
 
-
+        self.decoder = Decoder()
 
     def initializeUI(self):
         self.setGeometry(100, 100, 1440, 1024) # x, y, width, y_coord
@@ -86,47 +87,20 @@ class Window(QMainWindow):
         Left_button.resize(45, 80)
         Left_button.move(0, 95)
         Left_button.setStyleSheet("background-color:rgb(54,54,54);") 
-        ############
+        #################
 
         ###Undertape panel####
         Undertape = QLabel(self)
-        Undertape.resize(1440, 40)
+        Undertape.resize(1440, 30)
         Undertape.move(0,210)
         Undertape.setStyleSheet("background-color:rgb(37,37,38);")
-        ############  
-
-        #self.Table_panel = Table(self)
-        #self.Table_panel.resize(1000, 1000)
-        #self.Table_panel.move(100, 500)
-         
-        ###Table####
-        #layout = QGridLayout()
+        ######################  
         
+        #####Table panel#######
         Table = Table_panel(self)
         self.Table_panel = Table
+        #######################
         
-        #Temp_1.move(40,335)
-        #Temp_1.resize(1000,1000)
-        #Table = QScrollArea(Back_table)
-        #Table.resize(1360, 250)1);")
-        #temp = self.create_Toolbar_button(74, 36, 31, 25, 110, 340, '/icons/run_button4', self.run_buttonClicked)
-        #Table.setWidget(Front_table)
-        #Table.setWidget(temp)
-
-        #lines1 = list()
-        #for i in range(0,23):
-        #    lines1.append(QLabel(self))
-        #    lines1[i].resize(1, 700)
-        #    lines1[i].move(100+i*60,290)
-        #    lines1[i].setStyleSheet("background-color:rgb(0,0,0);")
-
-        #lines2 = list()
-        #for i in range(0,15):
-        #    lines2.append(QLabel(self))
-        #    lines2[i].resize(1360, 1)
-        #    lines2[i].move(40,335+i*45)
-        #    lines2[i].setStyleSheet("background-color:rgb(0,0,0);")
-        ############  
 
 
 
@@ -138,6 +112,17 @@ class Window(QMainWindow):
         save = QAction('Save', self)
         save.setShortcut('Ctrl+S')
         save.triggered.connect(self.file_save)
+
+        open_file = QAction('Open', self)
+        open_file.setShortcut('Ctrl+O')
+        open_file.triggered.connect(self.file_open)
+
+        decode_import_dikarev = QAction('Import Dikarev', self)
+        decode_import_dikarev.triggered.connect(self.decoder_import_dikarev)
+        decode_export_dikarev = QAction('Export Dikarev', self)
+        decode_export_dikarev.triggered.connect(self.decoder_export_dikarev)
+
+        wait_for = QAction('Wait for next version 🙃', self)
 
         speed_025 = QAction('0.25x', self)
         speed_05 = QAction('0.5x', self)
@@ -193,8 +178,9 @@ class Window(QMainWindow):
         menu_bar.adjustSize()
         file_menu = menu_bar.addMenu('File')
         speed_menu = menu_bar.addMenu('Speed')
-        Export_menu = menu_bar.addMenu('Export')
+        Decoder_menu = menu_bar.addMenu('Decoder')
         Compile_menu = menu_bar.addMenu('Compile')
+
 
         speed_menu.addAction(speed_025)
         speed_menu.addAction(speed_05)
@@ -205,13 +191,18 @@ class Window(QMainWindow):
         speed_menu.addAction(speed_beyond_max)
         
         file_menu.addAction(save)
+        file_menu.addAction(open_file)
         file_menu.addAction(exit_act)
+
+        Decoder_menu.addAction(decode_import_dikarev)
+        Decoder_menu.addAction(decode_export_dikarev)
+        Compile_menu.addAction(wait_for)
         
 ####################################################################################################################
 #                                                      Menu functions                                              #
 ####################################################################################################################
 
-    ##Speed functions####
+    ################Speed functions##############
     def speed_025x(self):
         self.run_speed = 1 
         self.no_animations = False
@@ -239,29 +230,30 @@ class Window(QMainWindow):
     def speed_beyond_max(self):
         self.run_speed = 0
         self.no_animations = True
-    ###################
+    ##############################################
 
+    ##################File functions##############
     def create_file_label(self, path):
-        file_name = path
+        file_name = copy.copy(path)
         file_name = file_name.split('/')
         file_name[-1] = file_name[-1].split('.')
         file_name = file_name[-1][0]
 
         print("Hello")
         self.file_label = QLabel(self)
-        self.file_label.resize(60+len(file_name)*5, 40)
+        self.file_label.resize(60+len(file_name)*10, 30)
         self.file_label.move(0, 210) 
-        self.file_label.setStyleSheet("background-color:rgb(39,41,45); ; color:#00D1FF") #background-color:rgb(39,41,45);       
+        self.file_label.setStyleSheet("background-color:rgb(39,41,45); color:#FF00FF") #background-color:rgb(39,41,45);       
         self.file_label.show()
         print("Hello")
 
-        Font = QFont("Roboto",22)
+        Font = QFont("Roboto",16)
         self.file_label.setFont(Font)
         self.file_label.setText(file_name)
         self.file_label.setAlignment(Qt.AlignCenter)
         return
 
-    ####File functions####
+
     def file_save(self):
         if self.run_activated == True:
             self.information_box("Не можливо зберегти файл під час роботи емулятора!")
@@ -273,27 +265,85 @@ class Window(QMainWindow):
             file_name = file_dialog.getSaveFileName(self, "Open a file", "", "(*.pkl)")
             self.file_path = file_name[0]
 
+            
             print(self.file_path)
-        
             with open(self.file_path, 'wb') as output:
-                info = Save_to_file(copy.copy(self.emulator), self.saved_tape, self.saved_position, self.Table_panel.machine)
+                info = Save_to_file(self.saved_tape, self.saved_position, self.Table_panel.machine)
                 pickle.dump(info, output)
                 del info
 
             self.create_file_label(self.file_path)
         
         else:
+            self.file_label.setStyleSheet("background-color:rgb(37,37,38); color:#C201C2")
+            print(self.file_path)
             with open(self.file_path, 'wb') as output:
-                info = Save_to_file(copy.copy(self.emulator), self.saved_tape, self.saved_position, self.Table_panel.machine)
+                info = Save_to_file(self.saved_tape, self.saved_position, self.Table_panel.machine)
                 pickle.dump(info, output)
                 del info
+            QApplication.processEvents()
+            time.sleep(0.1)
+            self.file_label.setStyleSheet("background-color:rgb(39,41,45); color:#FF00FF")
+            
+
+    def file_open(self):
+        if self.run_activated == True:
+            self.information_box("Не можливо відкрити файл під час роботи емулятора!")
+            return
+
+        file_dialog = QFileDialog(self)
+        file_dialog.setNameFilter("*.pkl")
+        
+        file_name = file_dialog.getOpenFileName(self, "Open a file", "", "(*.pkl)")
+        self.file_path = file_name[0]
+
+        print(self.file_path)
+        with open(self.file_path, 'rb') as input:
+                info = pickle.load(input) #emulator, tape, position, machine
+                self.saved_position = info.position
+                self.saved_tape = info.tape
+                self.Table_panel.machine = info.machine
+                self.emulator.tape = copy.copy(self.saved_tape)
+                self.emulator.position = copy.copy(self.saved_position)
+                self.emulator.state = 1
+                #del info
+        self.update_data()
 
 
 
-    #def file_download(self):
-        #file_name = QFileDialog.getOpenFileName(self, "Open a file")
+        self.create_file_label(self.file_path)       
+    ####################################################################
 
-    #####################
+    #########################Decoder functions##########################
+    def decoder_import_dikarev(self):
+        if self.run_activated == True:
+            self.information_box("Не можливо декодувати файл під час роботи емулятора!")
+            return
+
+        file_dialog = QFileDialog(self)
+        file_dialog.setNameFilter("*.txt")
+        
+        file_name = file_dialog.getOpenFileName(self, "Open a file", "", "(*.txt)")
+        self.file_path = file_name[0]
+
+        self.Table_panel.machine = self.decoder.Dikarev_decoder(self.file_path)
+        self.create_file_label(self.file_path)
+        self.update_data()
+
+
+    def decoder_export_dikarev(self):
+        if self.run_activated == True:
+            self.information_box("Не можливо закодувати файл під час роботи емулятора!")
+            return
+        
+        file_dialog = QFileDialog(self)
+        file_dialog.setNameFilter("*.txt")
+        file_name = file_dialog.getSaveFileName(self, "Open a file", "", "(*.txt)")
+        self.file_path = file_name[0]
+        self.decoder.Dikarev_encoder(self.Table_panel.machine, self.file_path) 
+
+
+    
 
     def create_Toolbar_button(self, size1, size2, icon_size1, icon_size2, x, y, short_path, connection):
         current_directory = str(pathlib.Path(__file__).parent.absolute())
@@ -880,15 +930,19 @@ class Window(QMainWindow):
     def state_text_buttonClicked(self):
         return
 
+    def update_data(self):
+        self.get_data(self.emulator)
+        self.Table_panel.updateTable()
+
+
 ####################################################################################################################
 #                                                   File class                                                     #
 ####################################################################################################################
 class Save_to_file():
-    def __init__(self, emulator, tape, position, machine):
-        self.emulator = emulator
-        self.emulator.tape = tape
-        self.emulator.position = position
-        self.machine = machine
+    def __init__(self, tape1, position1, machine1):
+        self.tape = tape1
+        self.position = position1
+        self.machine = machine1
     
 ####################################################################################################################
 #                                                   Run program                                                    #

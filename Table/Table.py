@@ -105,6 +105,7 @@ class Table_panel(QLabel):
         #print(self.machine.alphabet)
 
         self.updateTable_rows()
+        self.updateTable_items()
 
         time.sleep(0.1)
         self.alphabet_line.setStyleSheet("background-color:#252526; color:rgb(240,0,240);")
@@ -404,10 +405,10 @@ class Table_panel(QLabel):
                 item.setText('')
 
 
-    def updateTable(self):
+    def updateTable_items(self):
         Font = QFont("Roboto",12)
         Font.setBold(True)
-        #print("updateTable")
+        #print("updateTable_items")
         #print(self.machine.table)
 
         for column in range(0, self.table.columnCount()):
@@ -422,7 +423,7 @@ class Table_panel(QLabel):
                self.table.item(row, column).setTextAlignment(Qt.AlignCenter)
                self.text_change_again = True
                self.table.item(row, column).setFont(Font)
-        #print("updateTable end")
+        #print("updateTable_items end")
         return
         
     def updateTable_rows(self):
@@ -451,12 +452,39 @@ class Table_panel(QLabel):
                 item.setFont(temp_font)
                 self.table.setVerticalHeaderItem(row, item)
 
-        self.updateTable()
+        return
+    
+    def updateTable_columns(self):
+        if len(self.machine.amount_of_states) == self.table.columnCount():
+            pass
 
+        elif len(self.machine.amount_of_states) >= self.table.columnCount()+1:
+            while(self.table.columnCount() <= len(self.machine.amount_of_states)-1):
+                self.table.insertColumn(self.table.columnCount())
+
+        else:
+            while(self.table.columnCount() >= len(self.machine.amount_of_states)+1):
+                self.table.removeColumn(self.table.columnCount()-1)
+                
+
+        Font = QFont("Roboto",12)
+        Font.setBold(True)
+
+        for column in range(1, self.table.columnCount()+1):
+            self.table.setHorizontalHeaderItem(column-1, QTableWidgetItem('Q'+str(column)))
+            self.table.horizontalHeaderItem(column-1).setFont(Font)
+        
+        return
+
+
+    def updateTable(self):
+        self.updateTable_columns()
+        self.updateTable_rows()
+        self.updateTable_items()
         return
 
         
-    
+###############################################################################################
     def call_warning_box(self, message):
         current_directory = str(pathlib.Path(__file__).parent.parent.absolute())
         path = current_directory + '/icons/warning'

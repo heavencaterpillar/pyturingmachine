@@ -4,7 +4,8 @@ class Decoder():
     def __init__(self):
         return None
 
-    def Dikarev_decoder(self, file):
+    def Dikarev_decoder(self, file_path):
+        file = open(file_path)
         file_list = file.read()
         file_list = file_list.split('\n')
         file_list.pop(0)
@@ -65,8 +66,8 @@ class Decoder():
 
         return Encoded_MT
 
-    def Dikarev_encoder(self, MT):
-        f = open("/home/anton/IASA/Kyrs_2/Semestr_2/OOP/Individual_work/pyturingmachine/output/output.cmd", "w")
+    def Dikarev_encoder(self, MT, file_path):
+        f = open(file_path)
 
         for i in MT.table:
             for j in MT.table[i]:
