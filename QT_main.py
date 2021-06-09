@@ -112,6 +112,10 @@ class Window(QMainWindow):
         save = QAction('Save', self)
         save.setShortcut('Ctrl+S')
         save.triggered.connect(self.file_save)
+        save_as = QAction('Save as...', self)
+        save_as.setShortcut('Ctrl+Shift+S')
+        save_as.triggered.connect(self.file_save_as)
+        
 
         open_file = QAction('Open', self)
         open_file.setShortcut('Ctrl+O')
@@ -191,6 +195,7 @@ class Window(QMainWindow):
         speed_menu.addAction(speed_beyond_max)
         
         file_menu.addAction(save)
+        file_menu.addAction(save_as)
         file_menu.addAction(open_file)
         file_menu.addAction(exit_act)
 
@@ -234,6 +239,8 @@ class Window(QMainWindow):
 
     ##################File functions##############
     def create_file_label(self, path):
+        
+        file_name = 'unnamed'
         file_name = copy.copy(path)
         file_name = file_name.split('/')
         file_name[-1] = file_name[-1].split('.')
@@ -243,7 +250,7 @@ class Window(QMainWindow):
         self.file_label = QLabel(self)
         self.file_label.resize(60+len(file_name)*10, 30)
         self.file_label.move(0, 210) 
-        self.file_label.setStyleSheet("background-color:rgb(39,41,45); color:#FF00FF") #background-color:rgb(39,41,45);       
+        self.file_label.setStyleSheet("background-color:rgb(39,41,45); color:#FF76FF") #background-color:rgb(39,41,45);       
         self.file_label.show()
         print("Hello")
 
@@ -275,21 +282,41 @@ class Window(QMainWindow):
             self.create_file_label(self.file_path)
         
         else:
-            self.file_label.setStyleSheet("background-color:rgb(37,37,38); color:#C201C2")
+            self.file_label.setStyleSheet("background-color:rgb(37,37,38); color:#D663D6")
             print(self.file_path)
             with open(self.file_path, 'wb') as output:
                 info = Save_to_file(self.saved_tape, self.saved_position, self.Table_panel.machine)
                 pickle.dump(info, output)
                 del info
             QApplication.processEvents()
-            time.sleep(0.1)
-            self.file_label.setStyleSheet("background-color:rgb(39,41,45); color:#FF00FF")
+            time.sleep(0.15)
+            self.file_label.setStyleSheet("background-color:rgb(39,41,45); color:#FF76FF")
+
+    def file_save_as(self):
+        if self.run_activated == True:
+            self.information_box("Не можливо зберегти файл під час роботи емулятора!")
+            return
+
+        file_dialog = QFileDialog(self)
+        file_dialog.setNameFilter("*.pkl")
+        file_name = file_dialog.getSaveFileName(self, "Open a file", "", "(*.pkl)")
+        self.file_path = file_name[0]
+        
+        print(self.file_path)
+        with open(self.file_path, 'wb') as output:
+            info = Save_to_file(self.saved_tape, self.saved_position, self.Table_panel.machine)
+            pickle.dump(info, output)
+            del info
+        self.create_file_label(self.file_path)
+        return
+        
+        
             
 
     def file_open(self):
         if self.run_activated == True:
             self.information_box("Не можливо відкрити файл під час роботи емулятора!")
-            return
+            return  
 
         file_dialog = QFileDialog(self)
         file_dialog.setNameFilter("*.pkl")
@@ -327,7 +354,11 @@ class Window(QMainWindow):
         self.file_path = file_name[0]
 
         self.Table_panel.machine = self.decoder.Dikarev_decoder(self.file_path)
+        self.Table_panel.machine.alphabet.remove(' ')
+        self.Table_panel.machine.alphabet.append(' ')
+        self.Table_panel.alphabet_line.setText(("").join(self.Table_panel.machine.alphabet[0:len(self.Table_panel.machine.alphabet)-1]))
         self.create_file_label(self.file_path)
+        self.file_path = None
         self.update_data()
 
 
@@ -341,9 +372,9 @@ class Window(QMainWindow):
         file_name = file_dialog.getSaveFileName(self, "Open a file", "", "(*.txt)")
         self.file_path = file_name[0]
         self.decoder.Dikarev_encoder(self.Table_panel.machine, self.file_path) 
+    ###########################################################################
 
 
-    
 
     def create_Toolbar_button(self, size1, size2, icon_size1, icon_size2, x, y, short_path, connection):
         current_directory = str(pathlib.Path(__file__).parent.absolute())

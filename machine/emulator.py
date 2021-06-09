@@ -66,7 +66,7 @@ class Turing_machine():
                 command[0] = '>'
             elif command[0] == "\u034C":
                 command[0] = '.' 
-            print(command)
+            #print(command)
 
             if not command[0] in self.alphabet:
                 if command[0] == '':

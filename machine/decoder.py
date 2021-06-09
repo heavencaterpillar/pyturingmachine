@@ -59,6 +59,7 @@ class Decoder():
 
             file_list[i] = line
 
+        print(alphabet)
         #Получили строчки в файле в виде ['Символ1', 'Состояние1', 'Символ2', 'Направление', 'Состояние2']
         Encoded_MT = Turing_machine(max_state, alphabet)
         for line in file_list:

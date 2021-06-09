@@ -415,6 +415,9 @@ class Table_panel(QLabel):
            for row in range(0, self.table.rowCount()):
                print('Q'+str(column+1), self.machine.alphabet[row])
                item_text = self.machine.command_getter(column+1, self.machine.alphabet[row])
+               if item_text != '':
+                   if item_text[0] == ' ':
+                       item_text[0] = 'λ'
                item_text = ("").join(item_text)
                print(item_text)
                self.text_change_again = True
@@ -455,15 +458,15 @@ class Table_panel(QLabel):
         return
     
     def updateTable_columns(self):
-        if len(self.machine.amount_of_states) == self.table.columnCount():
+        if self.machine.amount_of_states == self.table.columnCount():
             pass
 
-        elif len(self.machine.amount_of_states) >= self.table.columnCount()+1:
-            while(self.table.columnCount() <= len(self.machine.amount_of_states)-1):
+        elif self.machine.amount_of_states >= self.table.columnCount()+1:
+            while(self.table.columnCount() <= self.machine.amount_of_states-1):
                 self.table.insertColumn(self.table.columnCount())
 
         else:
-            while(self.table.columnCount() >= len(self.machine.amount_of_states)+1):
+            while(self.table.columnCount() >= self.machine.amount_of_states+1):
                 self.table.removeColumn(self.table.columnCount()-1)
                 
 
